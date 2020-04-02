@@ -1,2 +1,2 @@
 # WeChatterBot
-WeChatterBot origin ChatterBot
+WeChatterBot originate from ChatterBot
