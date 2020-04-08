@@ -6,7 +6,9 @@ venv
 .out
 .tox
 .coverage
+.idea
 *.pyc
+*.pyi
 *.swp
 *.egg-info
 *.egg/*
@@ -16,5 +18,4 @@ venv
 # Database files
 *.sqlite3
 *.iml
-*.pyi
 *.xml
