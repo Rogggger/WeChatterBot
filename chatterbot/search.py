@@ -1,4 +1,35 @@
-class IndexedTextSearch:
+class SearchAlgorithm:
+    """
+    A superclass for all search algorithm.
+    """
+    name = 'not_implemented_algorithm'
+
+    def __init__(self, chatbot, **kwargs):
+        from chatterbot.comparisons import LevenshteinDistance
+        self.chatbot = chatbot
+        statement_comparison_function = kwargs.get(
+            'statement_comparison_function',
+            LevenshteinDistance
+        )
+        self.compare_statements = statement_comparison_function(
+            language=self.chatbot.storage.tagger.language
+        )
+        self.search_page_size = kwargs.get(
+            'search_page_size', 1000
+        )
+
+    def search(self, input_statement, **additional_parameters):
+        raise self.SearchAlgorithmNotImplementedError()
+
+    class SearchAlgorithmNotImplementedError(NotImplementedError):
+        """
+        An exception to be raised when an adapter method has not been implemented.
+        """
+        def __init__(self, message='search'):
+            super().__init__(f'Method "{message}" must be overridden in a subclass method.')
+
+
+class IndexedTextSearch(SearchAlgorithm):
     """
     :param statement_comparison_function: A comparison class.
         Defaults to ``LevenshteinDistance``.
@@ -11,22 +42,7 @@ class IndexedTextSearch:
     name = 'indexed_text_search'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import LevenshteinDistance
-
-        self.chatbot = chatbot
-
-        statement_comparison_function = kwargs.get(
-            'statement_comparison_function',
-            LevenshteinDistance
-        )
-
-        self.compare_statements = statement_comparison_function(
-            language=self.chatbot.storage.tagger.language
-        )
-
-        self.search_page_size = kwargs.get(
-            'search_page_size', 1000
-        )
+        super().__init__(chatbot, **kwargs)
 
     def search(self, input_statement, **additional_parameters):
         """
@@ -84,7 +100,7 @@ class IndexedTextSearch:
                 yield statement
 
 
-class TextSearch:
+class TextSearch(SearchAlgorithm):
     """
     :param statement_comparison_function: A comparison class.
         Defaults to ``LevenshteinDistance``.
@@ -97,22 +113,7 @@ class TextSearch:
     name = 'text_search'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import LevenshteinDistance
-
-        self.chatbot = chatbot
-
-        statement_comparison_function = kwargs.get(
-            'statement_comparison_function',
-            LevenshteinDistance
-        )
-
-        self.compare_statements = statement_comparison_function(
-            language=self.chatbot.storage.tagger.language
-        )
-
-        self.search_page_size = kwargs.get(
-            'search_page_size', 1000
-        )
+        super().__init__(chatbot, **kwargs)
 
     def search(self, input_statement, **additional_parameters):
         """
