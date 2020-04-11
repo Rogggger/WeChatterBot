@@ -19,3 +19,6 @@ venv
 *.sqlite3
 *.iml
 *.xml
+
+config.py
+
