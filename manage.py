@@ -16,7 +16,7 @@ def createdb():
 
 manager.add_command('runserver', Server(
     use_reloader=True,
-    host='0.0.0.0',
+    host='127.0.0.1',
     port=5000
     # ssl_crt='/etc/letsencrypt/live/yuanw.wang/fullchain.pem',
     # ssl_key='/etc/letsencrypt/live/yuanw.wang/privkey.pem'
