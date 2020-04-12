@@ -10,7 +10,7 @@ class StorageAdapterNew(object):
 
     def __init__(self, *args, **kwargs):
         '''
-        初始化Storage Adapter
+        根据参数初始化Storage Adapter
         '''
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
