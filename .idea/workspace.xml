@@ -1,32 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="380ef968-4165-419f-8b61-d598d8b89e4d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chatterbot/languages.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatterbot/languages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/base_case.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/storage/_trial_temp/_trial_marker" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/storage/_trial_temp/test.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_adapter_validation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_chatbot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_cli.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_comparisons.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_conversations.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_conversations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_corpus.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_initialization.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_initialization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_languages.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/base_case.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_chatbot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_chatterbot_corpus_training.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_chatterbot_settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_django_adapter.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_logic_adapter_integration.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests_django/test_statement_integration.py" beforeDir="false" />
-    </list>
+    <list default="true" id="380ef968-4165-419f-8b61-d598d8b89e4d" name="Default Changelist" comment="更改 test 完成第一阶段&#10;base_case, test_adapter, test_chatbot, test_comparator, test_conversations, test_corpus, test_initialization" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -242,7 +217,7 @@
       <workItem from="1586676255497" duration="8732000" />
       <workItem from="1586739870813" duration="9477000" />
       <workItem from="1586779155133" duration="1759000" />
-      <workItem from="1586826525806" duration="2002000" />
+      <workItem from="1586826525806" duration="2356000" />
     </task>
     <task id="LOCAL-00001" summary="Update chatterbot.search.py">
       <created>1586352505138</created>
@@ -258,7 +233,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586352717324</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="更改 test 完成第一阶段&#10;base_case, test_adapter, test_chatbot, test_comparator, test_conversations, test_corpus, test_initialization">
+      <created>1586830603375</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1586830603375</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -269,7 +251,14 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_WIDTH">
+                <map>
+                  <entry key="2" value="69" />
+                  <entry key="3" value="75" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -279,7 +268,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update chatterbot.search.py" />
     <MESSAGE value="Update gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update gitignore" />
+    <MESSAGE value="更改 test 完成第一阶段&#10;base_case, test_adapter, test_chatbot, test_comparator, test_conversations, test_corpus, test_initialization" />
+    <option name="LAST_COMMIT_MESSAGE" value="更改 test 完成第一阶段&#10;base_case, test_adapter, test_chatbot, test_comparator, test_conversations, test_corpus, test_initialization" />
   </component>
   <component name="WindowStateProjectService">
     <state x="508" y="235" key="#Web_Browsers" timestamp="1586571595643">
@@ -298,10 +288,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1586829924574" />
-    <state x="303" y="26" key="CommitChangelistDialog2" timestamp="1586830297119">
+    <state x="303" y="26" key="CommitChangelistDialog2" timestamp="1586830559128">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="303" y="26" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1586830297119" />
+    <state x="303" y="26" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1586830559128" />
     <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1586352706566">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
