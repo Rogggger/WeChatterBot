@@ -1,0 +1,69 @@
+commit 17fabd99d9862bf6ac9fbcb0e5cd1b5bcf23138d
+Merge: a7f7d75 812d594
+Author: Jack2313 <570055398@qq.com>
+Date:   Thu May 7 16:20:38 2020 +0800
+
+    merge master into conversation_manager
+
+commit a7f7d750a1b8254486f776e1ae2f3bb26bfebb1c
+Author: Jack2313 <570055398@qq.com>
+Date:   Sun May 3 21:19:58 2020 +0800
+
+    complete and test update methods
+
+commit 12edad3da490f55045574b38ef42af8320fb1f9b
+Author: Jack2313 <570055398@qq.com>
+Date:   Sat May 2 20:25:19 2020 +0800
+
+    complete and test delete methods
+
+commit fa436381cdd99ffb4fb539ac754a7d727b68a6d7
+Merge: 9d10c81 c96b94f
+Author: Jack2313 <570055398@qq.com>
+Date:   Sat May 2 19:23:36 2020 +0800
+
+    Merge branch 'master' of github.com:Rogggger/WeChatterBot into conversation_manager
+
+commit 9d10c81459cf982ebc05c579c44a44e887ded19f
+Author: Jack2313 <570055398@qq.com>
+Date:   Thu Apr 30 12:47:05 2020 +0800
+
+    complete and test statement add & search
+
+commit fd3467db0d5475dc9d728c363283f411ddac0a6f
+Author: Jack2313 <570055398@qq.com>
+Date:   Wed Apr 29 22:07:12 2020 +0800
+
+    successfully integrate sqlite
+
+commit 6f90a471c4d13b757c9c68f1d1b67eb7931e8e0a
+Merge: 3b06113 1a53777
+Author: Jack2313 <570055398@qq.com>
+Date:   Wed Apr 29 22:06:00 2020 +0800
+
+    Merge branch 'master' of github.com:Rogggger/WeChatterBot into conversation_manager
+
+commit 3b0611316dc2859ba35c88ef06b09854fb8c5a86
+Merge: 69bf2ca cb8cf5d
+Author: Jack2313 <570055398@qq.com>
+Date:   Tue Apr 28 21:55:39 2020 +0800
+
+    resolve merging conflict in init.py
+
+commit 69bf2ca2568f99a3b6293b7ca4c606c03d5a0090
+Author: Jack2313 <570055398@qq.com>
+Date:   Fri Apr 24 16:40:25 2020 +0800
+
+    4.22 debugging
+
+commit ada9325b5b0a4fedc69dad0d9666681045f78686
+Author: Jack2313 <570055398@qq.com>
+Date:   Thu Apr 16 16:21:23 2020 +0800
+
+    add create_statement & delete method
+
+commit 8f21cf7979cf6d23b318f9f704f17ef6be4f4b50
+Author: Jack2313 <570055398@qq.com>
+Date:   Wed Apr 15 13:05:21 2020 +0800
+
+    add conversation manager
