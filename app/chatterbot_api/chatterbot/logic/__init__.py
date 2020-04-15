@@ -1,9 +1,9 @@
-from chatterbot.logic.logic_adapter import LogicAdapter
-from chatterbot.logic.best_match import BestMatch
-from chatterbot.logic.mathematical_evaluation import MathematicalEvaluation
-from chatterbot.logic.specific_response import SpecificResponseAdapter
-from chatterbot.logic.time_adapter import TimeLogicAdapter
-from chatterbot.logic.unit_conversion import UnitConversion
+from app.chatterbot_api.chatterbot.logic.logic_adapter import LogicAdapter
+from app.chatterbot_api.chatterbot.logic.best_match import BestMatch
+from app.chatterbot_api.chatterbot.logic.mathematical_evaluation import MathematicalEvaluation
+from app.chatterbot_api.chatterbot.logic.specific_response import SpecificResponseAdapter
+from app.chatterbot_api.chatterbot.logic.time_adapter import TimeLogicAdapter
+from app.chatterbot_api.chatterbot.logic.unit_conversion import UnitConversion
 
 __all__ = (
     'LogicAdapter',

@@ -1,8 +1,8 @@
 import logging
-from chatterbot.storage import StorageAdapter
-from chatterbot.logic import LogicAdapter
-from chatterbot.search import TextSearch, IndexedTextSearch
-from chatterbot import utils
+from app.chatterbot_api.chatterbot.storage import StorageAdapter
+from app.chatterbot_api.chatterbot.logic import LogicAdapter
+from app.chatterbot_api.chatterbot.search import TextSearch, IndexedTextSearch
+from app.chatterbot_api.chatterbot import utils
 
 
 class ChatBot(object):
@@ -239,7 +239,7 @@ class ChatBot(object):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from chatterbot.conversation import Statement as StatementObject
+        from app.chatterbot_api.chatterbot.conversation import Statement as StatementObject
 
         conversation_statements = list(self.storage.filter(
             conversation=conversation,

@@ -5,7 +5,7 @@ class SearchAlgorithm:
     name = 'not_implemented_algorithm'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import LevenshteinDistance
+        from app.chatterbot_api.chatterbot.comparisons import LevenshteinDistance
         self.chatbot = chatbot
         statement_comparison_function = kwargs.get(
             'statement_comparison_function',

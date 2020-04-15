@@ -1,17 +1,17 @@
 import logging
-from chatterbot import languages
-from chatterbot.tagging import PosLemmaTagger
+from app.chatterbot_api.chatterbot import languages
+from app.chatterbot_api.chatterbot.tagging import PosLemmaTagger
 
 
 class StorageAdapterNew(object):
-    '''
+    """
     基于WechatterBot需求的storage adapter抽象类接口
-    '''
+    """
 
     def __init__(self, *args, **kwargs):
-        '''
+        """
         根据参数初始化Storage Adapter
-        '''
+        """
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
         Tagger = kwargs.get('tagger', PosLemmaTagger)
@@ -21,33 +21,33 @@ class StorageAdapterNew(object):
         ))
 
     def filter_text(self, **kwargs):
-        '''
+        """
         对话查询
-        '''
+        """
         raise self.AdapterMethodNotImplementedError(
             'The `filter_text` method is not implemented by this adapter.'
         )
 
     def filter_rules(self, **kwargs):
-        '''
+        """
         对话规则查询
-        '''
+        """
         raise self.AdapterMethodNotImplementedError(
             'The `filter_rules` method is not implemented by this adapter.'
         )
 
     def create_text(self, **kwargs):
-        '''
+        """
         在Storage Adapter中创建一条新的对话
-        '''
+        """
         raise self.AdapterMethodNotImplementedError(
             'The `create_text` method is not implemented by this adapter.'
         )
 
     def create_rule(self, **kwargs):
-        '''
+        """
         在Storage Adapter中创建一条新的对话规则
-        '''
+        """
         raise self.AdapterMethodNotImplementedError(
             'The `create_rule` method is not implemented by this adapter.'
         )
