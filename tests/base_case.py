@@ -1,5 +1,8 @@
+import sys
+sys.path.append('../app/chatterbot_api')
+
 from unittest import TestCase
-from chatterbot import ChatBot
+from app.chatterbot_api.chatterbot import ChatBot
 from typing import Sized
 
 Keyword_args = {
@@ -8,7 +11,6 @@ Keyword_args = {
     # Don't execute initialization processes such as downloading required data
     'initialize': False
 }
-
 class ChatBotTestCase(TestCase):
     """
     base test case for chatbot
@@ -57,7 +59,7 @@ class ChatBotMongoTestCase(ChatBotTestCase):
             raise SkipTest('Unable to connect to Mongo DB.')
 
     def get_kwargs(self):
-        kwargs = super().get_kwargs()
+        kwargs = super().kwargs
         kwargs['database_uri'] = 'mongodb://localhost:27017/chatterbot_test_database'
         kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs
@@ -66,6 +68,6 @@ class ChatBotMongoTestCase(ChatBotTestCase):
 class ChatBotSQLTestCase(ChatBotTestCase):
 
     def get_kwargs(self):
-        kwargs = super().get_kwargs()
+        kwargs = super().kwargs
         kwargs['storage_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         return kwargs

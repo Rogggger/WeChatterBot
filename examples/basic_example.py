@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../app/chatterbot_api')
+
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 

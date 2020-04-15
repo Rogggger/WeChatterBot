@@ -1,6 +1,8 @@
 import os
 import io
 from unittest import TestCase
+import sys
+sys.path.append('../app/chatterbot_api')
 from chatterbot import corpus
 
 LANGUAGES = ('english', 'chinese')

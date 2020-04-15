@@ -1,4 +1,6 @@
 from unittest import TestCase
+import sys
+sys.path.append('../app/chatterbot_api')
 from chatterbot.conversation import Statement
 
 class StatementTests(TestCase):
