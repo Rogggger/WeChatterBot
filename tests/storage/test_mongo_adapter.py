@@ -1,6 +1,6 @@
 from unittest import TestCase
-from chatterbot.storage import MongoDatabaseAdapter
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.storage import MongoDatabaseAdapter
+from app.chatterbot_api.chatterbot.conversation import Statement
 
 
 class MongoAdapterTestCase(TestCase):
@@ -117,7 +117,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.assertEqual(random_statement.text, text)
 
     def test_get_random_no_data(self):
-        from chatterbot.storage import StorageAdapter
+        from app.chatterbot_api.chatterbot.storage import StorageAdapter
 
         with self.assertRaises(StorageAdapter.EmptyDatabaseException):
             self.adapter.get_random()

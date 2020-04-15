@@ -8,9 +8,9 @@ from unittest import skip
 from warnings import warn
 from random import choice
 from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
-from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
-from chatterbot.logic import BestMatch
-from chatterbot import comparisons, response_selection, utils
+from app.chatterbot_api.chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
+from app.chatterbot_api.chatterbot.logic import BestMatch
+from app.chatterbot_api.chatterbot import comparisons, response_selection, utils
 
 
 WORDBANK = (

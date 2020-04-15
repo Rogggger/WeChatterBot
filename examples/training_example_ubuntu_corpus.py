@@ -3,8 +3,8 @@ This example shows how to train a chat bot using the
 Ubuntu Corpus of conversation dialog.
 """
 import logging
-from chatterbot import ChatBot
-from chatterbot.trainers import UbuntuCorpusTrainer
+from app.chatterbot_api.chatterbot import ChatBot
+from app.chatterbot_api.chatterbot.trainers import UbuntuCorpusTrainer
 
 # Enable info level logging
 logging.basicConfig(level=logging.INFO)

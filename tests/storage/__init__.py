@@ -1,6 +1,6 @@
-from chatterbot.storage.storage_adapter import StorageAdapter
-from chatterbot.storage.mongodb import MongoDatabaseAdapter
-from chatterbot.storage.sql_storage import SQLStorageAdapter
+from app.chatterbot_api.chatterbot.storage.storage_adapter import StorageAdapter
+from app.chatterbot_api.chatterbot.storage.mongodb import MongoDatabaseAdapter
+from app.chatterbot_api.chatterbot.storage.sql_storage import SQLStorageAdapter
 
 __all__ = (
     'StorageAdapter',

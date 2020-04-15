@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.logic import LogicAdapter
-from chatterbot.trainers import ListTrainer
+from app.chatterbot_api.chatterbot.logic import LogicAdapter
+from app.chatterbot_api.chatterbot.trainers import ListTrainer
 
 
 class DummyMutatorLogicAdapter(LogicAdapter):

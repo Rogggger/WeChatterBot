@@ -1,6 +1,6 @@
-from chatterbot.logic import LogicAdapter
-from chatterbot.conversation import Statement
-from chatterbot import languages
+from app.chatterbot_api.chatterbot.logic import LogicAdapter
+from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot import languages
 
 
 class MathematicalEvaluation(LogicAdapter):

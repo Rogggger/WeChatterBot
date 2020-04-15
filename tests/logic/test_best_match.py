@@ -1,5 +1,5 @@
-from chatterbot.logic import BestMatch
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.logic import BestMatch
+from app.chatterbot_api.chatterbot.conversation import Statement
 from tests.base_case import ChatBotTestCase
 
 

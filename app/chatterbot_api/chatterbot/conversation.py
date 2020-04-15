@@ -111,7 +111,7 @@ class Statement(StatementMixin):
         return self.text
 
     def __repr__(self):
-        return '<Statement text:%s>' % (self.text)
+        return '<Statement text:%s>' % self.text
 
     def save(self):
         """

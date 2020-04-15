@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.logic import LogicAdapter
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.logic import LogicAdapter
+from app.chatterbot_api.chatterbot.conversation import Statement
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_conversation_values_persisted_to_response(self):
@@ -74,6 +74,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.chatbot.storage.create(text='How are you?', in_response_to='Hello')
         first_response = self.chatbot.get_response('Hi')
         second_response = self.chatbot.get_response('How are you?')
+        # TODO test failed
         # self.assertEqual(first_response.confidence, 1)
         # self.assertEqual(first_response.text, 'Hello')
         self.assertEqual(second_response.confidence, 0)
@@ -82,6 +83,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.chatbot.storage.create(text='I am well.', in_response_to='How are you?')
         first_response = self.chatbot.get_response('Hi')
         second_response = self.chatbot.get_response('How are you?')
+        # TODO test failed
         # self.assertEqual(first_response.confidence, 1)
         # self.assertEqual(first_response.text, 'Hello')
         self.assertEqual(second_response.confidence, 1)

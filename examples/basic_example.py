@@ -1,8 +1,5 @@
-import sys
-sys.path.append('../app/chatterbot_api')
-
-from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer
+from app.chatterbot_api.chatterbot import ChatBot
+from app.chatterbot_api.chatterbot.trainers import ListTrainer
 
 # Create a new chat bot named Charlie
 chatbot = ChatBot('Charlie')

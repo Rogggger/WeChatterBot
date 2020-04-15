@@ -1,7 +1,7 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.conversation import Statement
-from chatterbot.search import TextSearch, IndexedTextSearch
-from chatterbot import comparisons
+from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.search import TextSearch, IndexedTextSearch
+from app.chatterbot_api.chatterbot import comparisons
 
 
 class SearchTestCase(ChatBotTestCase):

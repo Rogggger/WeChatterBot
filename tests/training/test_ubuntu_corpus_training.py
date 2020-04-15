@@ -3,7 +3,7 @@ from io import BytesIO
 import tarfile
 import os
 from tests.base_case import ChatBotTestCase
-from chatterbot.trainers import UbuntuCorpusTrainer
+from app.chatterbot_api.chatterbot.trainers import UbuntuCorpusTrainer
 
 
 class UbuntuCorpusTrainerTestCase(ChatBotTestCase):

@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.logic import UnitConversion
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.logic import UnitConversion
+from app.chatterbot_api.chatterbot.conversation import Statement
 
 
 class UnitConversionTests(ChatBotTestCase):

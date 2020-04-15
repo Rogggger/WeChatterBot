@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.trainers import ListTrainer
-from chatterbot import preprocessors
+from app.chatterbot_api.chatterbot.trainers import ListTrainer
+from app.chatterbot_api.chatterbot import preprocessors
 
 
 class ListTrainingTests(ChatBotTestCase):

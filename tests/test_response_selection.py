@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotSQLTestCase
-from chatterbot import response_selection
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot import response_selection
+from app.chatterbot_api.chatterbot.conversation import Statement
 
 
 class ResponseSelectionTests(ChatBotSQLTestCase):

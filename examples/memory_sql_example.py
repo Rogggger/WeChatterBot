@@ -1,4 +1,4 @@
-from chatterbot import ChatBot
+from app.chatterbot_api.chatterbot import ChatBot
 
 # Uncomment the following lines to enable verbose logging
 # import logging

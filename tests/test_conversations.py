@@ -1,7 +1,5 @@
 from unittest import TestCase
-import sys
-sys.path.append('../app/chatterbot_api')
-from chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.conversation import Statement
 
 class StatementTests(TestCase):
     def test_serializer(self):

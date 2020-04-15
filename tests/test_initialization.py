@@ -1,8 +1,8 @@
 from tests.base_case import ChatBotTestCase
 
-from chatterbot.storage import SQLStorageAdapter as Storage
-from chatterbot.logic import BestMatch as Logic_1
-from chatterbot.logic import MathematicalEvaluation as Logic_2
+from app.chatterbot_api.chatterbot.storage import SQLStorageAdapter as Storage
+from app.chatterbot_api.chatterbot.logic import BestMatch as Logic_1
+from app.chatterbot_api.chatterbot.logic import MathematicalEvaluation as Logic_2
 
 Storage_path = f'chatterbot.storage.{Storage.__name__}'
 Logic_1_path = f'chatterbot.logic.{Logic_1.__name__}'

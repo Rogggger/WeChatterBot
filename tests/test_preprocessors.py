@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.conversation import Statement
-from chatterbot import preprocessors
+from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot import preprocessors
 
 
 class PreprocessorIntegrationTestCase(ChatBotTestCase):

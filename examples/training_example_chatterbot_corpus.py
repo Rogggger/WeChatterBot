@@ -1,5 +1,5 @@
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
+from app.chatterbot_api.chatterbot import ChatBot
+from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
 import logging
 
 

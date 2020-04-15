@@ -3,11 +3,9 @@ Test ChatterBot's statement comparison algorithms.
 """
 
 from unittest import TestCase
-import sys
-sys.path.append('../app/chatterbot_api')
-from chatterbot.conversation import Statement
-from chatterbot import comparisons
-from chatterbot import languages
+from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot import comparisons
+from app.chatterbot_api.chatterbot import languages
 
 # set language
 LANGUAGE = languages.ENG

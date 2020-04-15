@@ -1,5 +1,5 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.trainers import ChatterBotCorpusTrainer
+from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
 
 
 class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):

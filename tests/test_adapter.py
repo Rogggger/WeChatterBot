@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot import ChatBot
-from chatterbot.adapters import Adapter
+from app.chatterbot_api.chatterbot import ChatBot
+from app.chatterbot_api.chatterbot.adapters import Adapter
 
 def get_kwargs():
     return {
@@ -16,7 +16,6 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['storage_adapter'] = 'chatterbot.logic.LogicAdapter'
         with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        self.fail('aaa')
 
     def test_valid_storage_adapter(self):
         kwargs = get_kwargs()

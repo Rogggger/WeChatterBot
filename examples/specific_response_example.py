@@ -1,4 +1,4 @@
-from chatterbot import ChatBot
+from app.chatterbot_api.chatterbot import ChatBot
 
 
 # Create a new instance of a ChatBot

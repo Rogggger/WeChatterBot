@@ -1,6 +1,6 @@
 from unittest import TestCase
 from datetime import timedelta, datetime
-from chatterbot import parsing
+from app.chatterbot_api.chatterbot import parsing
 
 
 class DateTimeParsingFunctionIntegrationTestCases(TestCase):

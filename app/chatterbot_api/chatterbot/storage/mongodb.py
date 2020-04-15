@@ -1,5 +1,5 @@
 import re
-from chatterbot.storage import StorageAdapter
+from app.chatterbot_api.chatterbot.storage import StorageAdapter
 
 
 class MongoDatabaseAdapter(StorageAdapter):
@@ -45,7 +45,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Return the class for the statement model.
         """
-        from chatterbot.conversation import Statement
+        from app.chatterbot_api.chatterbot.conversation import Statement
 
         # Create a storage-aware statement
         statement = Statement

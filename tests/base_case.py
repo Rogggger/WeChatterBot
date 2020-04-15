@@ -1,6 +1,3 @@
-import sys
-sys.path.append('../app/chatterbot_api')
-
 from unittest import TestCase
 from app.chatterbot_api.chatterbot import ChatBot
 from typing import Sized

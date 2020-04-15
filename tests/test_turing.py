@@ -4,7 +4,7 @@ from unittest import TestCase, expectedFailure
 class TuringTests(TestCase):
 
     def setUp(self):
-        from chatterbot import ChatBot
+        from app.chatterbot_api.chatterbot import ChatBot
 
         self.chatbot = ChatBot('Agent Jr.')
 

@@ -1,5 +1,5 @@
 import string
-from chatterbot import languages
+from app.chatterbot_api.chatterbot import languages
 from spacy.lang.zh import Chinese
 
 
