@@ -4,6 +4,8 @@ from flask import request, jsonify, make_response
 from app.chatterbot_api import chatterbot
 from app.chatterbot_api.chatterbot import languages
 from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
+import logging
+import json
 
 bp_manager = Blueprint('/manager', __name__)
 
@@ -48,15 +50,21 @@ def get_user(user_id):
 
 @bp_manager.route('/create_statement', methods=['POST'])
 def create():
-    post_text = request.form['text']
-    post_response = request.form['response']
+    data=json.loads(request.get_data(as_text=True))
+    print(data['text'])
+    text = data['text']
+    response = data['response']
+    tags = data['tags']
+    search_text = data['text']
+    search_response = data['response']
+
     # 调用数据接口
     code = 0
     new_statement = {}
 
     # 调用数据接口
-    data = {'code': code, 'statement': new_statement}
-    return _make_response(data)
+    result = {'code': code, 'statement': new_statement}
+    return _make_response(result)
 
 
 @bp_manager.route('/create_rule', methods=['POST'])
@@ -74,16 +82,21 @@ def create_rule():
 
 @bp_manager.route('/update_statement', methods=['POST'])
 def update():
-    post_id = request.form['id']
-    post_text = request.form['text']
-    post_response = request.form['response']
+    data = json.loads(request.get_data(as_text=True))
+    print(data['text'])
+    id = data['id']
+    text = data['text']
+    response = data['response']
+    tags = data['tags']
+    search_text = data['text']
+    search_response = data['response']
     # 调用数据接口
     code = 0
     new_statement = {}
 
     # 调用数据接口
-    data = {'code': code, 'statement': new_statement}
-    return _make_response(data)
+    result = {'code': code, 'statement': new_statement}
+    return _make_response(result)
 
 
 @bp_manager.route('/update_rule', methods=['POST'])
@@ -104,6 +117,7 @@ def update_rule():
 def query():
     s_text = request.args.get("text")
     s_id = request.args.get("id")
+    # logging.info("aass")
     # 调用数据接口
     code = 0
     number = 0

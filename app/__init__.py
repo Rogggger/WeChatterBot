@@ -26,6 +26,13 @@ from app.chatterbot_api.conversation_manager import bp_manager
 from app.view.get_response import bp_response
 from app.view.wechat import bp_wechat
 
+<<<<<<< HEAD
+=======
+def create_app(object_name):
+    app = Flask(__name__)
+    app.config.from_object(object_name)
+    app.debug=True
+>>>>>>> ada9325... add create_statement & delete method
 
 <<<<<<< HEAD
 def create_app():
