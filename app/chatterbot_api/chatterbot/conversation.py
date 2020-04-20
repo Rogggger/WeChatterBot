@@ -118,3 +118,24 @@ class Statement(StatementMixin):
         Save the statement in the database.
         """
         self.storage.update(self)
+
+
+class StatementRules(object):
+    __slots__ = (
+        'id',
+        'search_text',
+        'search_in_response_to',
+        'storage',
+    )
+
+    def __init__(self, rule_id, search_text, search_in_response_to):
+        self.id = rule_id
+        self.search_text = search_text
+        self.search_in_response_to = search_in_response_to
+        self.storage = None
+
+    def save(self):
+        """
+        Save the statement in the database.
+        """
+        self.storage.update_rules(self)
