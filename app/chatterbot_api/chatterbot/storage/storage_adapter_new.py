@@ -20,6 +20,38 @@ class StorageAdapterNew(object):
             'tagger_language', languages.ENG
         ))
 
+    def get_model(self, model_name):
+        """
+        Return the model class for a given model name.
+
+        model_name is case insensitive.
+        """
+        get_model_method = getattr(self, 'get_%s_model' % (
+            model_name.lower(),
+        ))
+
+        return get_model_method()
+
+    def get_object(self, object_name):
+        """
+        Return the class for a given object name.
+
+        object_name is case insensitive.
+        """
+        get_model_method = getattr(self, 'get_%s_object' % (
+            object_name.lower(),
+        ))
+
+        return get_model_method()
+
+    def count(self, search_table):
+        """
+        Return the number of entries in the search table.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `count` method is not implemented by this adapter.'
+        )
+
     def filter_text(self, **kwargs):
         """
         对话查询

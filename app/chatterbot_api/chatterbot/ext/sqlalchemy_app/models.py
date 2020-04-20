@@ -112,3 +112,19 @@ class Statement(Base, StatementMixin):
         self.tags.extend([
             Tag(name=tag) for tag in tags
         ])
+
+
+class StatementRules(Base):
+    """
+    对话规则对应的表
+    """
+    search_text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=False,
+        server_default=''
+    )
+    search_in_response_to = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=False,
+        server_default=''
+    )
