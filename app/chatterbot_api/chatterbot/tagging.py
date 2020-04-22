@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../../..')
 import string
 from app.chatterbot_api.chatterbot import languages
 from spacy.lang.zh import Chinese
@@ -41,7 +43,6 @@ class PosLemmaTagger(object):
                 text = text_without_punctuation
 
         document = self.nlp(text)
-
         if len(text) <= 2:
             bigram_pairs = [
                 token.lemma_.lower() for token in document
@@ -68,3 +69,8 @@ class PosLemmaTagger(object):
             ]
 
         return ' '.join(bigram_pairs)
+
+if __name__ == '__main__':
+    tagger = PosLemmaTagger()
+    text = tagger.get_text_index_string('who is you?')
+    print(text)
