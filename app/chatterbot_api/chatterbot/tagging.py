@@ -56,7 +56,8 @@ class PosLemmaTagger(object):
                 tokens = [
                     token for token in document if token.is_alpha
                 ]
-
+            tokens = [token.lemma_.lower() for token in tokens]
+            return ' '.join(tokens)
             for index in range(1, len(tokens)):
                 bigram_pairs.append('{}:{}'.format(
                     tokens[index - 1].pos_,
@@ -72,5 +73,5 @@ class PosLemmaTagger(object):
 
 if __name__ == '__main__':
     tagger = PosLemmaTagger()
-    text = tagger.get_text_index_string('who is you?')
+    text = tagger.get_text_index_string('你是谁?')
     print(text)
