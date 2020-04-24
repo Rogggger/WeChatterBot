@@ -7,7 +7,7 @@ from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
 import logging
 import json
 
-bp_manager = Blueprint('/manager', __name__)
+bp_manager = Blueprint('/admin', __name__)
 
 
 @bp_manager.route('/test')
@@ -38,7 +38,7 @@ def admin_login():
         return _make_response(data)
 
 
-@bp_manager.route('/getUser/<user_id>')
+@bp_manager.route('/get_user/<user_id>')
 def get_user(user_id):
     data = {'code': 0, 'username': 'wechatterbot'}
     if user_id == 1:
@@ -57,6 +57,7 @@ def create():
     tags = data['tags']
     search_text = data['text']
     search_response = data['response']
+    tag_list = tags.split('+')
 
     # 调用数据接口
     code = 0
@@ -90,6 +91,7 @@ def update():
     tags = data['tags']
     search_text = data['text']
     search_response = data['response']
+    tag_list = tags.split('+')
     # 调用数据接口
     code = 0
     new_statement = {}
