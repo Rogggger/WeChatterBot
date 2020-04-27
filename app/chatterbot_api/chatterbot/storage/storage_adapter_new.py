@@ -60,12 +60,28 @@ class StorageAdapterNew(object):
             'The `filter_text` method is not implemented by this adapter.'
         )
 
+    def filter_text_by_text(self, statement_text):
+        """
+        对话查询,通过text查找
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `filter_text_by_text` method is not implemented by this adapter.'
+        )
+
     def filter_rules(self, **kwargs):
         """
         对话规则查询
         """
         raise self.AdapterMethodNotImplementedError(
             'The `filter_rules` method is not implemented by this adapter.'
+        )
+
+    def filter_rules_by_text(self, rule_text):
+        """
+        对话规则查询
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `filter_rules_by_text` method is not implemented by this adapter.'
         )
 
     def create_text(self, **kwargs):
@@ -116,7 +132,7 @@ class StorageAdapterNew(object):
             'The `update_rule` method is not implemented by this adapter.'
         )
 
-    def remove_text(self, statement_text):
+    def remove_text(self,**kwargs):
         """
         删除对应的对话
         """
@@ -124,12 +140,44 @@ class StorageAdapterNew(object):
             'The `remove_text` method is not implemented by this adapter.'
         )
 
-    def remove_rule(self, statement_text):
+    def remove_text_by_text(self, statement_text):
+        """
+        删除对应的对话,根据text删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_text_by_text` method is not implemented by this adapter.'
+        )
+
+    def remove_text_by_id(self, statement_id):
+        """
+        删除对应的对话,根据id删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_text_by_id` method is not implemented by this adapter.'
+        )
+
+    def remove_rule(self, **kwargs):
         """
         删除对应的对话规则
         """
         raise self.AdapterMethodNotImplementedError(
             'The `remove_rule` method is not implemented by this adapter.'
+        )
+
+    def remove_rule_by_text(self, rule_text):
+        """
+        删除对应的对话规则，根据对话删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_rule_by_text` method is not implemented by this adapter.'
+        )
+
+    def remove_rule_by_id(self, rule_id):
+        """
+        删除对应的对话规则，根据id删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_rule_by_id` method is not implemented by this adapter.'
         )
 
     def drop(self):

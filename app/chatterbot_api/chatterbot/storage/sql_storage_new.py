@@ -75,13 +75,29 @@ class SQLStorageAdapterNew(StorageAdapter):
         session.close()
         return statement_count
 
-    def remove_text(self, statement_text):
+    def remove_text(self, **kwargs):
         """
         删除符合statements的对话
         """
         Statement = self.get_model('statement')
         session = self.Session()
+        if len(kwargs) == 0:
+            query = session.query(Statement).filter()
+        else:
+            query = session.query(Statement).filter_by(**kwargs)
+        record = query.first()
 
+        session.delete(record)
+
+        self._session_finish(session)
+
+
+    def remove_text_by_text(self,statement_text):
+        """
+        删除符合statements的对话
+        """
+        Statement = self.get_model('statement')
+        session = self.Session()
         query = session.query(Statement).filter_by(text=statement_text)
         record = query.first()
 
@@ -89,14 +105,55 @@ class SQLStorageAdapterNew(StorageAdapter):
 
         self._session_finish(session)
 
-    def remove_rules(self, statement_text):
+    def remove_text_by_id(self,statement_id):
+        """
+        删除符合statements的对话
+        """
+        Statement = self.get_model('statement')
+        session = self.Session()
+        query = session.query(Statement).filter_by(id=statement_id)
+        record = query.first()
+
+        session.delete(record)
+
+        self._session_finish(session)
+
+    def remove_rules(self, **kwargs):
         """
         删除对应的对话规则
         """
         Statement = self.get_model('statementrules')
         session = self.Session()
+        if len(kwargs) == 0:
+            query = session.query(Statement).filter()
+        else:
+            query = session.query(Statement).filter_by(**kwargs)
+        record = query.first()
 
-        query = session.query(Statement).filter_by(text=statement_text)
+        session.delete(record)
+
+        self._session_finish(session)
+
+    def remove_rules_by_id(self, rule_id):
+        """
+        删除对应的对话规则
+        """
+        Statement = self.get_model('statementrules')
+        session = self.Session()
+        query = session.query(Statement).filter_by(id=rule_id)
+        record = query.first()
+
+        session.delete(record)
+
+        self._session_finish(session)
+
+    def remove_rules_by_text(self, rule_text):
+        """
+        删除对应的对话规则
+        """
+        Statement = self.get_model('statementrules')
+        session = self.Session()
+        query = session.query(Statement).filter_by(text=rule_text)
         record = query.first()
 
         session.delete(record)
@@ -266,8 +323,14 @@ class SQLStorageAdapterNew(StorageAdapter):
         Statement = self.get_model('statementrules')
 
         session = self.Session()
+        if 'search_text' not in kwargs:
+            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
 
+        if 'search_in_response_to' not in kwargs:
+            kwargs['search_in_response_to'] = self.tagger.get_text_index_string(
+                kwargs['in_response_to'])
         statement = Statement(**kwargs)
+
 
         session.add(statement)
 
@@ -383,6 +446,7 @@ class SQLStorageAdapterNew(StorageAdapter):
                     )
 
             # Update the response value
+            record.text = statement.text
             record.in_response_to = statement.in_response_to
 
             record.created_at = statement.created_at
@@ -414,15 +478,45 @@ class SQLStorageAdapterNew(StorageAdapter):
         """
         Statement = self.get_model('statementrules')
 
+
         if statement is not None:
             session = self.Session()
             record = None
             if hasattr(statement, 'id') and statement.id is not None:
                 record = session.query(Statement).get(statement.id)
-                if statement.search_text:
+                if statement.text is not None:
+                    record.text = statement.text
+                if statement.in_response_to is not None:
+                    record.in_response_to = statement.in_response_to
+                if statement.search_text is not None:
                     record.search_text = statement.search_text
-                if statement.search_in_response_to:
+                else:
+                    record.search_text = self.tagger.get_text_index_string(statement.text)
+                if statement.search_in_response_to is not None:
                     record.search_in_response_to = statement.search_in_response_to
+                elif statement.in_response_to is not None:
+                    record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+            else:
+                if statement.text is not None:
+                    record = session.query(Statement).filter(
+                        Statement.text == statement.text,
+                    ).first()
+            #if statement.search_in_response_to is not None:
+            #    record.search_in_response_to=statement.search_in_response_to
+            if not record:
+                record = Statement(
+                    text=statement.text,
+                )
+            if statement.in_response_to is not None:
+                record.in_response_to = statement.in_response_to
+            if statement.search_text is not None:
+                record.search_text = statement.search_text
+            else:
+                record.search_text=self.tagger.get_text_index_string(statement.text)
+            if statement.search_in_response_to is not None:
+                record.search_in_response_to = statement.search_in_response_to
+            elif statement.in_response_to is not None:
+                record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
 
             session.add(record)
 
