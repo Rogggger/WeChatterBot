@@ -4,6 +4,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 
 from app.chatterbot_api.chatterbot.conversation import StatementMixin
+from app.chatterbot_api.chatterbot.conversation import StatementRuleMixin
 from app.chatterbot_api.chatterbot import constants
 
 
@@ -112,3 +113,26 @@ class Statement(Base, StatementMixin):
         self.tags.extend([
             Tag(name=tag) for tag in tags
         ])
+
+
+class StatementRules(Base,StatementRuleMixin):
+    """
+    对话规则对应的表
+    """
+    text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH)
+    )
+    in_response_to = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=True
+    )
+    search_text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=True,
+        server_default=''
+    )
+    search_in_response_to = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=True,
+        server_default=''
+    )
