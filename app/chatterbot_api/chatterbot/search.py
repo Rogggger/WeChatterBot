@@ -12,7 +12,8 @@ class SearchAlgorithm:
             LevenshteinDistance
         )
         self.compare_statements = statement_comparison_function(
-            language=self.chatbot.storage.tagger.language
+            language=self.chatbot.storage.tagger.language,
+            **kwargs
         )
         self.search_page_size = kwargs.get(
             'search_page_size', 1000

@@ -56,6 +56,31 @@ class LevenshteinDistance(Comparator):
         return percent
 
 
+class W2vSimilarity(Comparator):
+    """
+    Calculate the similarity of two statements using Spacy models.
+    """
+
+    def __init__(self,language,**kwargs):
+        super().__init__(language)
+        import gensim
+        import numpy as np
+        w2vpath=kwargs.get('w2vpath','')
+        self.model = gensim.models.KeyedVectors.load_word2vec_format(w2vpath, binary=True)
+
+
+    def compare(self, statement_a, statement_b):
+        def sentence_vector(s):
+            words = s.split()
+            v = np.zeros(64)
+            for word in words:
+                v += self.model[word]
+            v /= len(words)
+            return v
+        v1, v2 = sentence_vector(statement_a.text), sentence_vector(statement_b.text)
+        sim = np.dot(x, y) / (np.linalg.norm(x) * np.linalg.norm(y))
+        return 0.5 + 0.5 * sim
+
 class SpacySimilarity(Comparator):
     """
     Calculate the similarity of two statements using Spacy models.
