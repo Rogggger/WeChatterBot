@@ -118,3 +118,76 @@ class Statement(StatementMixin):
         Save the statement in the database.
         """
         self.storage.update(self)
+
+
+class StatementRuleMixin(object):
+    """
+    This class has shared methods used to
+    normalize different statement models.
+    """
+
+    statement_field_names = [
+        'id',
+        'text',
+        'in_response_to',
+        'search_text',
+        'search_in_response_to',
+    ]
+
+    extra_statement_field_names = []
+
+    def get_statement_field_names(self):
+        """
+        Return the list of field names for the statement.
+        """
+        return self.statement_field_names + self.extra_statement_field_names
+
+
+
+    def serialize(self):
+        """
+        :returns: A dictionary representation of the statement object.
+        :rtype: dict
+        """
+        data = {}
+
+        for field_name in self.get_statement_field_names():
+            format_method = getattr(self, 'get_{}'.format(
+                field_name
+            ), None)
+
+            if format_method:
+                data[field_name] = format_method()
+            else:
+                data[field_name] = getattr(self, field_name)
+
+        return data
+
+
+
+class StatementRules(StatementRuleMixin):
+    __slots__ = (
+        'id',
+        'text',
+        'in_response_to',
+        'search_text',
+        'search_in_response_to',
+        'storage',
+    )
+
+    def __init__(self,text, in_response_to, search_text=None, search_in_response_to=None,**kwargs):
+        self.id = kwargs.get('id')
+        self.text = text
+        self.in_response_to = in_response_to
+        self.search_in_response_to = search_in_response_to
+        self.search_text = search_text
+        self.storage = None
+
+    def save(self):
+        """
+        Save the statement in the database.
+        """
+        self.storage.update_rules(self)
+
+
+
