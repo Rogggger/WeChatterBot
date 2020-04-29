@@ -8,13 +8,19 @@ from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
 bp_response = Blueprint('/chatterbot', __name__)
 
 chatbot = chatterbot.ChatBot(
-    "chatbot",
-    tagger_language=chatterbot.languages.CHI,
+    "My ChatterBot",
     logic_adapters=[
-        {
-            "import_path": "chatterbot.logic.BestMatch",
-            "statement_comparison_function": comparisons.JaccardSimilarity,
-            "response_selection_method": response_selection.get_most_frequent_response
-        }
-    ]
+        "chatterbot.logic.BestMatch",
+        "chatterbot.logic.RulesResponseAdapter"
+    ],
+    tagger_language=chatterbot.languages.CHI,
+    statement_comparison_function=comparisons.JaccardSimilarity,
+    response_selection_method=response_selection.get_most_frequent_response
 )
+trainer = ChatterBotCorpusTrainer(chatbot)
+trainer.train("chatterbot.corpus.chinese")
+@bp_response.route('/<message>')
+def response(message):
+    res = chatbot.get_response(message)
+    return res.text
+

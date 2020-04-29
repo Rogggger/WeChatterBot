@@ -142,8 +142,13 @@ class JaccardSimilarity(Comparator):
     def __init__(self, language,**kwargs):
         super().__init__(language,**kwargs)
         import spacy
-
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        language = self.language.ISO_639_1.lower()
+        if language == 'zh':
+            from spacy.lang.zh import Chinese
+            self.nlp = Chinese()
+        else:
+            self.nlp = spacy.load(language)
+        #self.nlp = spacy.load(self.language.ISO_639_1)
 
     def compare(self, statement_a, statement_b):
         """
@@ -164,6 +169,6 @@ class JaccardSimilarity(Comparator):
         # Calculate Jaccard similarity
         numerator = len(statement_a_lemmas.intersection(statement_b_lemmas))
         denominator = float(len(statement_a_lemmas.union(statement_b_lemmas)))
-        ratio = numerator / denominator
+        ratio = numerator / (denominator+1e-5)
 
         return ratio
