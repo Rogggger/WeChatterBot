@@ -29,7 +29,8 @@ class SQLStorageAdapterNew(StorageAdapterNew):
                 dbapi_connection.execute('PRAGMA journal_mode=WAL')
                 dbapi_connection.execute('PRAGMA synchronous=NORMAL')
 
-        if not self.engine.dialect.has_table(self.engine, 'Statement'):
+        if (not self.engine.dialect.has_table(self.engine, 'Statement')) or \
+                (not self.engine.dialect.has_table(self.engine, 'StatementRules')):
             self.create_database()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
