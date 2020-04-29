@@ -2,7 +2,6 @@ from flask import Blueprint
 from app.chatterbot_api import chatterbot
 from app.chatterbot_api.chatterbot import languages
 from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
-
 from app.chatterbot_api.chatterbot import *
 from app.chatterbot_api.chatterbot import response_selection
 from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
@@ -19,11 +18,3 @@ chatbot = chatterbot.ChatBot(
         }
     ]
 )
-#chatbot = chatterbot.ChatBot('chatbot',tagger_language=languages.CHI)
-trainer = ChatterBotCorpusTrainer(chatbot)
-trainer.train("chatterbot.corpus.chinese")
-
-@bp_response.route('/<message>')
-def response(message):
-    res = chatbot.get_response(message)
-    return res.text
