@@ -4,15 +4,73 @@ from flask import request, jsonify, make_response
 from app.chatterbot_api import chatterbot
 from app.chatterbot_api.chatterbot import languages
 from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
+from app.chatterbot_api.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
 import logging
 import json
 
 bp_manager = Blueprint('/admin', __name__)
+db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3')
 
 
 @bp_manager.route('/test')
 def test():
     return "Hello, Conversation Manager"
+
+
+@bp_manager.route('/init_db')
+def init_db():
+    db.create_rule(
+        id=1,
+        text="test rule",
+        in_response_to="rule 1!"
+    )
+    db.create_rule(
+        text="search test rule",
+        in_response_to="rule 2!"
+    )
+    db.create_rule(
+        text="search test rule 2",
+        in_response_to="rule 3!"
+    )
+    db.create_rule(
+        text="update test rule",
+        in_response_to="rule 4!"
+    )
+    db.create_rule(
+        text="delete test rule",
+        in_response_to="rule 5!"
+    )
+    db.create_text(
+        text="test statement",
+        in_response_to="statement 1!"
+    )
+    db.create_text(
+        text="search test statement",
+        in_response_to="statement 2!"
+    )
+    db.create_text(
+        text="search test statement",
+        in_response_to="statement 3!"
+    )
+    db.create_text(
+        text="update test statement",
+        in_response_to="statement 4!"
+    )
+    db.create_text(
+        text="delete test statement",
+        in_response_to="statement 5!"
+    )
+    db.create_text(
+        text="text statement with tags",
+        in_response_to="cant live without tags",
+        tags=["test"]
+    )
+
+    data = {
+        'r_num': db.count('statementrules'),
+        's_num': db.count('statement')
+    }
+    return _make_response(data)
 
 
 def _make_response(data):
