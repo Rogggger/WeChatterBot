@@ -24,8 +24,8 @@ test.create_text(text="How are you?")
 '''
 count rule and statement
 '''
-statement_count = test.count("statement")
-rule_count = test.count("statementrules")
+statement_count = test.count_by_name("statement")
+rule_count = test.count_by_name("statementrules")
 print("stmt count = ",statement_count)
 print("rule count = ",rule_count)
 
@@ -73,7 +73,7 @@ res=list(test.filter_text(text="How are you?"))
 '''
 remove rules and statement
 '''
-
+test.count()
 test.remove_rules_by_id(1)
 res=list(test.filter_rules(id=1))
 print(len(res))
