@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 
 class Comparator:
 
-    def __init__(self, language):
+    def __init__(self, language,**kwargs):
 
         self.language = language
 
@@ -27,7 +27,7 @@ class LevenshteinDistance(Comparator):
     "where is the post office?" and "looking for the post office"
     based on the Levenshtein distance algorithm.
     """
-
+    
     def compare(self, statement_a, statement_b):
         """
         Compare the two input statements.
@@ -62,22 +62,30 @@ class W2vSimilarity(Comparator):
     """
 
     def __init__(self,language,**kwargs):
-        super().__init__(language)
+        super().__init__(language,**kwargs)
         import gensim
         import numpy as np
-        w2vpath=kwargs.get('w2vpath','')
+        import jieba
+        print('init w2v')
+        w2vpath=kwargs.get('w2vpath','D:\\cocde\\chatbot\\news_12g_baidubaike_20g_novel_90g_embedding_64.bin')
         self.model = gensim.models.KeyedVectors.load_word2vec_format(w2vpath, binary=True)
+        self.np = np
+        self.jieba = jieba
 
 
     def compare(self, statement_a, statement_b):
+        np = self.np
         def sentence_vector(s):
-            words = s.split()
+            words = self.jieba.lcut(s)
             v = np.zeros(64)
+            ll = 0
             for word in words:
-                v += self.model[word]
-            v /= len(words)
+                if word in self.model:
+                    v += self.model[word]
+                    ll += 1
+            v /= ll
             return v
-        v1, v2 = sentence_vector(statement_a.text), sentence_vector(statement_b.text)
+        x, y = sentence_vector(statement_a.search_text), sentence_vector(statement_b.search_text)
         sim = np.dot(x, y) / (np.linalg.norm(x) * np.linalg.norm(y))
         return 0.5 + 0.5 * sim
 
@@ -86,8 +94,8 @@ class SpacySimilarity(Comparator):
     Calculate the similarity of two statements using Spacy models.
     """
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language,**kwargs):
+        super().__init__(language,**kwargs)
         import spacy
 
         self.nlp = spacy.load(self.language.ISO_639_1)
@@ -131,8 +139,8 @@ class JaccardSimilarity(Comparator):
     .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
 
-    def __init__(self, language):
-        super().__init__(language)
+    def __init__(self, language,**kwargs):
+        super().__init__(language,**kwargs)
         import spacy
 
         self.nlp = spacy.load(self.language.ISO_639_1)

@@ -1,7 +1,7 @@
-from app.chatterbot_api.chatterbot.storage import StorageAdapter
+from app.chatterbot_api.chatterbot.storage import StorageAdapterNew
 
 
-class SQLStorageAdapterNew(StorageAdapter):
+class SQLStorageAdapterNew(StorageAdapterNew):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -41,6 +41,16 @@ class SQLStorageAdapterNew(StorageAdapter):
         from app.chatterbot_api.chatterbot.ext.sqlalchemy_app.models import Statement
         return Statement
 
+    def get_statement_object(self):
+        from app.chatterbot_api.chatterbot.conversation import Statement
+
+        StatementModel = self.get_model('statement')
+
+        Statement.statement_field_names.extend(
+            StatementModel.extra_statement_field_names
+        )
+
+        return Statement
     def get_tag_model(self):
         """
         Return the conversation model.

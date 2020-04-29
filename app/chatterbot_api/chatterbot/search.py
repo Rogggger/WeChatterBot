@@ -11,6 +11,7 @@ class SearchAlgorithm:
             'statement_comparison_function',
             LevenshteinDistance
         )
+        print(statement_comparison_function)
         self.compare_statements = statement_comparison_function(
             language=self.chatbot.storage.tagger.language,
             **kwargs

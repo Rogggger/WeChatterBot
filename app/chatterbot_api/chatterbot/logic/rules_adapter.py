@@ -1,7 +1,7 @@
 from app.chatterbot_api.chatterbot.logic import LogicAdapter
 from app.chatterbot_api.chatterbot.conversation import Statement
 
-class RulesAdapter(LogicAdapter):
+class RulesResponseAdapter(LogicAdapter):
     """
     Return a specific response to a specific input.
 
@@ -22,11 +22,11 @@ class RulesAdapter(LogicAdapter):
 
     def process(self, statement, additional_response_selection_parameters=None):
 
-        rules_list = self.chatbot.storage.filter() # 提取所有规则对话
+        rules_list = self.chatbot.storage.filter_rules() # 提取所有规则对话
         response = Statement(text='',confidence=0)
         for rule in rules_list:
             if statement.text == rule.text:
-                response = rule
+                response = Statement(text=rule.in_response_to)
                 rule.confidence=1
                 break
         return response
