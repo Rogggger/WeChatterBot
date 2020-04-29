@@ -3,11 +3,14 @@
 
 # SQL Storage Adapter New相关接口以及说明
 
+## 相关说明
+SQL Storage Adapter New 兼容了SQL Storage Adapter 关于statement的增删改查接口 名字均与SQL Storage Adapter 中接口名字一致。
 ## 表结构
 statement与chatterbot一致，statementrules之包含id,text,in_response_to,search_text,search_in_response_to字段，具体类型可看model.py
 
 ## 初始化
 需要提供数据库的uri,若不设置则默认uri为'sqlite:///db.sqlite3'
+
 
 例子：
 ```python
@@ -16,11 +19,12 @@ test = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3')
 
 ## Count
 需要输入相对应的表获得当前数据库中相关表的元组数目，目前支持的输入：'statement','tag','statementrules'
+接口为count_by_name
 
 例子:
 ```python
-test.count('statementrules')
-test.count('statement')
+test.count_by_name('statementrules')
+test.count_by_name('statement')
 ```
 
 ## Create

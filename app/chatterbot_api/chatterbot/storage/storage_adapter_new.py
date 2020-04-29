@@ -44,6 +44,17 @@ class StorageAdapterNew(object):
 
         return get_model_method()
 
+    def get_statement_object(self):
+        from app.chatterbot_api.chatterbot.conversation import Statement
+
+        StatementModel = self.get_model('statement')
+
+        Statement.statement_field_names.extend(
+            StatementModel.extra_statement_field_names
+        )
+
+        return Statement
+
     def count(self, search_table):
         """
         Return the number of entries in the search table.
@@ -187,6 +198,12 @@ class StorageAdapterNew(object):
         raise self.AdapterMethodNotImplementedError(
             'The `drop` method is not implemented by this adapter.'
         )
+
+    class EmptyDatabaseException(Exception):
+
+        def __init__(self, message=None):
+            default = 'The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'
+            super().__init__(message or default)
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """
