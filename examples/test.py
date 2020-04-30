@@ -14,7 +14,7 @@ chatbot = chatterbot.ChatBot(
         "chatterbot.logic.RulesResponseAdapter"
     ],
     tagger_language=chatterbot.languages.CHI,
-    #statement_comparison_function=comparisons.W2vSimilarity,
+    statement_comparison_function=comparisons.JaccardSimilarity,
     response_selection_method=response_selection.get_most_frequent_response
 )
 chatbot.storage.create_rule(text='今天天气真好',in_response_to='是啊')
