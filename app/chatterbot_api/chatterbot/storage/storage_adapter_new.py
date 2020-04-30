@@ -20,6 +20,49 @@ class StorageAdapterNew(object):
             'tagger_language', languages.ENG
         ))
 
+    def get_model(self, model_name):
+        """
+        Return the model class for a given model name.
+
+        model_name is case insensitive.
+        """
+        get_model_method = getattr(self, 'get_%s_model' % (
+            model_name.lower(),
+        ))
+
+        return get_model_method()
+
+    def get_object(self, object_name):
+        """
+        Return the class for a given object name.
+
+        object_name is case insensitive.
+        """
+        get_model_method = getattr(self, 'get_%s_object' % (
+            object_name.lower(),
+        ))
+
+        return get_model_method()
+
+    def get_statement_object(self):
+        from app.chatterbot_api.chatterbot.conversation import Statement
+
+        StatementModel = self.get_model('statement')
+
+        Statement.statement_field_names.extend(
+            StatementModel.extra_statement_field_names
+        )
+
+        return Statement
+
+    def count(self, search_table):
+        """
+        Return the number of entries in the search table.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `count` method is not implemented by this adapter.'
+        )
+
     def filter_text(self, **kwargs):
         """
         对话查询
@@ -28,12 +71,28 @@ class StorageAdapterNew(object):
             'The `filter_text` method is not implemented by this adapter.'
         )
 
+    def filter_text_by_text(self, statement_text):
+        """
+        对话查询,通过text查找
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `filter_text_by_text` method is not implemented by this adapter.'
+        )
+
     def filter_rules(self, **kwargs):
         """
         对话规则查询
         """
         raise self.AdapterMethodNotImplementedError(
             'The `filter_rules` method is not implemented by this adapter.'
+        )
+
+    def filter_rules_by_text(self, rule_text):
+        """
+        对话规则查询
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `filter_rules_by_text` method is not implemented by this adapter.'
         )
 
     def create_text(self, **kwargs):
@@ -84,7 +143,7 @@ class StorageAdapterNew(object):
             'The `update_rule` method is not implemented by this adapter.'
         )
 
-    def remove_text(self, statement_text):
+    def remove_text(self,**kwargs):
         """
         删除对应的对话
         """
@@ -92,12 +151,44 @@ class StorageAdapterNew(object):
             'The `remove_text` method is not implemented by this adapter.'
         )
 
-    def remove_rule(self, statement_text):
+    def remove_text_by_text(self, statement_text):
+        """
+        删除对应的对话,根据text删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_text_by_text` method is not implemented by this adapter.'
+        )
+
+    def remove_text_by_id(self, statement_id):
+        """
+        删除对应的对话,根据id删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_text_by_id` method is not implemented by this adapter.'
+        )
+
+    def remove_rule(self, **kwargs):
         """
         删除对应的对话规则
         """
         raise self.AdapterMethodNotImplementedError(
             'The `remove_rule` method is not implemented by this adapter.'
+        )
+
+    def remove_rule_by_text(self, rule_text):
+        """
+        删除对应的对话规则，根据对话删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_rule_by_text` method is not implemented by this adapter.'
+        )
+
+    def remove_rule_by_id(self, rule_id):
+        """
+        删除对应的对话规则，根据id删除
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove_rule_by_id` method is not implemented by this adapter.'
         )
 
     def drop(self):
@@ -107,6 +198,12 @@ class StorageAdapterNew(object):
         raise self.AdapterMethodNotImplementedError(
             'The `drop` method is not implemented by this adapter.'
         )
+
+    class EmptyDatabaseException(Exception):
+
+        def __init__(self, message=None):
+            default = 'The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'
+            super().__init__(message or default)
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """
