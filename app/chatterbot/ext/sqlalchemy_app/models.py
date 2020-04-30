@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 
-from app.chatterbot_api.chatterbot.conversation import StatementMixin
-from app.chatterbot_api.chatterbot.conversation import StatementRuleMixin
-from app.chatterbot_api.chatterbot import constants
+from app.chatterbot.conversation import StatementMixin
+from app.chatterbot.conversation import StatementRuleMixin
+from app.chatterbot import constants
 
 
 class ModelBase(object):

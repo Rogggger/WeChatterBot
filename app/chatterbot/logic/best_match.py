@@ -1,5 +1,5 @@
-from app.chatterbot_api.chatterbot.logic import LogicAdapter
-from app.chatterbot_api.chatterbot import filters
+from app.chatterbot.logic import LogicAdapter
+from app.chatterbot import filters
 
 
 class BestMatch(LogicAdapter):

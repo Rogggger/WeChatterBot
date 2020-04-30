@@ -1,10 +1,10 @@
 from flask import Blueprint
-from app.chatterbot_api import chatterbot
-from app.chatterbot_api.chatterbot import languages
-from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
-from app.chatterbot_api.chatterbot import *
-from app.chatterbot_api.chatterbot import response_selection
-from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
+from app import chatterbot
+from app.chatterbot import languages
+from app.chatterbot.trainers import ChatterBotCorpusTrainer
+from app.chatterbot import *
+from app.chatterbot import response_selection
+from app.chatterbot.trainers import ChatterBotCorpusTrainer
 bp_response = Blueprint('/chatterbot', __name__)
 
 chatbot = chatterbot.ChatBot(

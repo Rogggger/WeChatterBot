@@ -1,6 +1,6 @@
 from datetime import datetime
-from app.chatterbot_api.chatterbot.logic import LogicAdapter
-from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot.logic import LogicAdapter
+from app.chatterbot.conversation import Statement
 
 
 class TimeLogicAdapter(LogicAdapter):

@@ -3,9 +3,9 @@ import sys
 import csv
 import time
 from dateutil import parser as date_parser
-from app.chatterbot_api.chatterbot.conversation import Statement
-from app.chatterbot_api.chatterbot.tagging import PosLemmaTagger
-from app.chatterbot_api.chatterbot import utils
+from app.chatterbot.conversation import Statement
+from app.chatterbot.tagging import PosLemmaTagger
+from app.chatterbot import utils
 
 
 class Trainer(object):
@@ -146,7 +146,7 @@ class ChatterBotCorpusTrainer(Trainer):
     """
 
     def train(self, *corpus_paths):
-        from app.chatterbot_api.chatterbot.corpus import load_corpus, list_corpus_files
+        from app.chatterbot.corpus import load_corpus, list_corpus_files
 
         data_file_paths = []
 

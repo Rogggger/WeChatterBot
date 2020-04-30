@@ -1,8 +1,8 @@
 import logging
-from app.chatterbot_api.chatterbot.storage import StorageAdapterNew
-from app.chatterbot_api.chatterbot.logic import LogicAdapter
-from app.chatterbot_api.chatterbot.search import TextSearch, IndexedTextSearch
-from app.chatterbot_api.chatterbot import utils
+from app.chatterbot.storage import StorageAdapterNew
+from app.chatterbot.logic import LogicAdapter
+from app.chatterbot.search import TextSearch, IndexedTextSearch
+from app.chatterbot import utils
 
 
 class ChatBot(object):
@@ -17,7 +17,6 @@ class ChatBot(object):
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
-        print(storage_adapter)
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapterNew)
 
@@ -238,7 +237,7 @@ class ChatBot(object):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from app.chatterbot_api.chatterbot.conversation import Statement as StatementObject
+        from app.chatterbot.conversation import Statement as StatementObject
 
         conversation_statements = list(self.storage.filter(
             conversation=conversation,

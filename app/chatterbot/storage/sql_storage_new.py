@@ -1,4 +1,4 @@
-from app.chatterbot_api.chatterbot.storage import StorageAdapterNew
+from app.chatterbot.storage import StorageAdapterNew
 
 
 class SQLStorageAdapterNew(StorageAdapterNew):
@@ -39,11 +39,11 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         """
         Return the statement model.
         """
-        from app.chatterbot_api.chatterbot.ext.sqlalchemy_app.models import Statement
+        from app.chatterbot.ext.sqlalchemy_app.models import Statement
         return Statement
 
     def get_statement_object(self):
-        from app.chatterbot_api.chatterbot.conversation import Statement
+        from app.chatterbot.conversation import Statement
 
         StatementModel = self.get_model('statement')
 
@@ -56,28 +56,28 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         """
         Return the conversation model.
         """
-        from app.chatterbot_api.chatterbot.ext.sqlalchemy_app.models import Tag
+        from app.chatterbot.ext.sqlalchemy_app.models import Tag
         return Tag
 
     def get_statementrules_model(self):
         """
         Return the rule model.
         """
-        from app.chatterbot_api.chatterbot.ext.sqlalchemy_app.models import StatementRules
+        from app.chatterbot.ext.sqlalchemy_app.models import StatementRules
         return StatementRules
 
     def model_to_object(self, statement):
-        from app.chatterbot_api.chatterbot.conversation import Statement as StatementObject
+        from app.chatterbot.conversation import Statement as StatementObject
 
         return StatementObject(**statement.serialize())
 
     def statement_model_to_object(self, statement):
-        from app.chatterbot_api.chatterbot.conversation import Statement as StatementObject
+        from app.chatterbot.conversation import Statement as StatementObject
 
         return StatementObject(**statement.serialize())
 
     def statementrules_model_to_object(self, statement):
-        from app.chatterbot_api.chatterbot.conversation import StatementRules as StatementObject
+        from app.chatterbot.conversation import StatementRules as StatementObject
         return StatementObject(**statement.serialize())
 
     def count(self):
@@ -811,7 +811,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         """
         Populate the database with the tables.
         """
-        from app.chatterbot_api.chatterbot.ext.sqlalchemy_app.models import Base
+        from app.chatterbot.ext.sqlalchemy_app.models import Base
         Base.metadata.create_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):

@@ -10,7 +10,7 @@ def import_module(dotted_path):
     """
     import importlib
     if dotted_path[:10] == 'chatterbot':
-        dotted_path = f'app.chatterbot_api.{dotted_path}'
+        dotted_path = f'app.{dotted_path}'
     module_parts = dotted_path.split('.')
     module_path = '.'.join(module_parts[:-1])
     module = importlib.import_module(module_path)
@@ -47,7 +47,7 @@ def validate_adapter_class(validate_class, adapter_class):
 
     :raises: Adapter.InvalidAdapterTypeException
     """
-    from app.chatterbot_api.chatterbot.adapters import Adapter
+    from app.chatterbot.adapters import Adapter
 
     # If a dictionary was passed in, check if it has an import_path attribute
     if isinstance(validate_class, dict):

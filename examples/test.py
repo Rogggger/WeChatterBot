@@ -1,11 +1,10 @@
 import sys
-sys.path.append('../')
-sys.path.append('../app/chatterbot_api')
-from app.chatterbot_api.chatterbot import *
-from app.chatterbot_api.chatterbot import response_selection
-from app.chatterbot_api import chatterbot
-from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
-from app.chatterbot_api.chatterbot.trainers import TsvTrainer
+print(sys.path)
+from app.chatterbot import *
+from app.chatterbot import response_selection
+from app import chatterbot
+from app.chatterbot.trainers import ChatterBotCorpusTrainer
+from app.chatterbot.trainers import TsvTrainer
 import os
 chatbot = chatterbot.ChatBot(
     "My ChatterBot",
