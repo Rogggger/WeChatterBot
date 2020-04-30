@@ -1,9 +1,6 @@
 from flask import Flask
 from flask import Blueprint
 from flask import request, jsonify, make_response
-from app.chatterbot_api import chatterbot
-from app.chatterbot_api.chatterbot import languages
-from app.chatterbot_api.chatterbot.trainers import ChatterBotCorpusTrainer
 from app.chatterbot_api.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
 import logging
 import json
@@ -82,6 +79,27 @@ def _make_response(data):
     return res
 
 
+def _statement2dict(s):
+    return {
+        'id': s.id,
+        'text': s.text,
+        'in_response_to': s.in_response_to,
+        'search_text': s.search_text,
+        'search_in_response_to': s.search_in_response_to,
+        'tags': s.tags
+    }
+
+
+def _rule2dict(r):
+    return {
+        'id': r.id,
+        'text': r.text,
+        'in_response_to': r.in_response_to,
+        'search_text': r.search_text,
+        'search_in_response_to': r.search_in_response_to,
+    }
+
+
 @bp_manager.route('/login')
 def admin_login():
     username = request.args.get("username")
@@ -108,18 +126,23 @@ def get_user(user_id):
 
 @bp_manager.route('/create_statement', methods=['POST'])
 def create():
-    data=json.loads(request.get_data(as_text=True))
+    data = json.loads(request.get_data(as_text=True))
     print(data['text'])
-    text = data['text']
-    response = data['response']
+    s_text = data['text']
+    s_response = data['response']
     tags = data['tags']
-    search_text = data['text']
-    search_response = data['response']
     tag_list = tags.split('+')
 
     # 调用数据接口
     code = 0
-    new_statement = {}
+    db.create_text(
+        text=s_text,
+        in_response_to=s_response,
+        tags=tag_list
+    )
+
+    new_statement = {'text': s_text, 'in_response_to': s_response, 'tags': tags}
+    code = 1
 
     # 调用数据接口
     result = {'code': code, 'statement': new_statement}
@@ -128,11 +151,17 @@ def create():
 
 @bp_manager.route('/create_rule', methods=['POST'])
 def create_rule():
-    post_text = request.form['text']
-    post_response = request.form['response']
+    data = json.loads(request.get_data(as_text=True))
+    r_text = request.form['text']
+    r_response = request.form['response']
     # 调用数据接口
     code = 0
-    new_rule = {}
+    db.create_rule(
+        text=r_text,
+        in_response_to=r_response
+    )
+    new_rule = {'text': r_text, 'in_response_to': r_response}
+    code = 1
 
     # 调用数据接口
     data = {'code': code, 'statement': new_rule}
@@ -181,10 +210,21 @@ def query():
     # 调用数据接口
     code = 0
     number = 0
-    statements = []
+    if s_id != '':
+        statements = list(db.filter_text(id=s_id))
+    else:
+        statements = list(db.filter_text(text=s_text))
+    number = len(statements)
+    code = 1
+
+    dict_statements = []
+    for s in statements:
+        print(s.text)
+        dict_statements.append(_statement2dict(s))
 
     # 调用数据接口
-    data = {'code': code, 'number': number, 'statements': statements}
+    data = {'code': code, 'number': number, 'statements': dict_statements}
+    print(data)
     return _make_response(data)
 
 
@@ -195,10 +235,19 @@ def query_rule():
     # 调用数据接口
     code = 0
     number = 0
-    rules = []
+    if r_id != '':
+        rules = list(db.filter_rules(id=r_id))
+    else:
+        rules = list(db.filter_rules(text=r_text))
+    number = len(rules)
+    code = 1
+
+    dict_rules = []
+    for r in rules:
+        dict_rules.append(_rule2dict(r))
 
     # 调用数据接口
-    data = {'code': code, 'number': number, 'rules': rules}
+    data = {'code': code, 'number': number, 'rules': dict_rules}
     return _make_response(data)
 
 
