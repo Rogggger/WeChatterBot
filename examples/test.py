@@ -1,5 +1,3 @@
-import sys
-print(sys.path)
 from app.chatterbot import *
 from app.chatterbot import response_selection
 from app import chatterbot
