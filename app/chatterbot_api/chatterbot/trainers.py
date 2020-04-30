@@ -73,6 +73,28 @@ class Trainer(object):
         with open(file_path, 'w+', encoding='utf8') as jsonfile:
             json.dump(export, jsonfile, ensure_ascii=False)
 
+class TsvTrainer(Trainer):
+    def train(self,file):
+        statements_to_create = []
+        with open(file,encoding='utf-8') as f:
+            for line in f:
+                line = line.split('\t')
+                text = line[1]
+                in_response_to = line[0]
+                statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
+                search_in_response_to = self.chatbot.storage.tagger.get_text_index_string(in_response_to)
+                statement = self.get_preprocessed_statement(
+                    Statement(
+                        text=text,
+                        search_text=statement_search_text,
+                        in_response_to=in_response_to,
+                        search_in_response_to=search_in_response_to,
+                        conversation='training'
+                    )
+                )
+                statements_to_create.append(statement)
+        self.chatbot.storage.create_many(statements_to_create)
+
 
 class ListTrainer(Trainer):
     """

@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../../..')
 import string
 from app.chatterbot_api.chatterbot import languages
 from spacy.lang.zh import Chinese
@@ -19,10 +21,10 @@ class PosLemmaTagger(object):
 
     def __init__(self, language=None):
         import spacy
-
         self.language = language or languages.ENG
-
-        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
+        punc = "！？｡＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏."
+        #punc = punc.decode("utf-8")
+        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation+punc))
         language = self.language.ISO_639_1.lower()
         if language == 'zh':
             self.nlp = Chinese()
@@ -39,9 +41,8 @@ class PosLemmaTagger(object):
             text_without_punctuation = text.translate(self.punctuation_table)
             if len(text_without_punctuation) >= 1:
                 text = text_without_punctuation
-
         document = self.nlp(text)
-
+        document = self.nlp(text)
         if len(text) <= 2:
             bigram_pairs = [
                 token.lemma_.lower() for token in document
@@ -55,7 +56,8 @@ class PosLemmaTagger(object):
                 tokens = [
                     token for token in document if token.is_alpha
                 ]
-
+            tokens = [token.lemma_.lower() for token in tokens]
+            return ' '.join(tokens)
             for index in range(1, len(tokens)):
                 bigram_pairs.append('{}:{}'.format(
                     tokens[index - 1].pos_,
@@ -68,3 +70,8 @@ class PosLemmaTagger(object):
             ]
 
         return ' '.join(bigram_pairs)
+
+if __name__ == '__main__':
+    tagger = PosLemmaTagger()
+    text = tagger.get_text_index_string('你是谁?')
+    print(text)

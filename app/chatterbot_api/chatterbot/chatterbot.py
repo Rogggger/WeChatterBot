@@ -1,5 +1,5 @@
 import logging
-from app.chatterbot_api.chatterbot.storage import StorageAdapter
+from app.chatterbot_api.chatterbot.storage import StorageAdapterNew
 from app.chatterbot_api.chatterbot.logic import LogicAdapter
 from app.chatterbot_api.chatterbot.search import TextSearch, IndexedTextSearch
 from app.chatterbot_api.chatterbot import utils
@@ -13,14 +13,13 @@ class ChatBot(object):
     def __init__(self, name, **kwargs):
         self.name = name
 
-        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
-
+        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapterNew')
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
-
+        print(storage_adapter)
         # Check that each adapter is a valid subclass of it's respective parent
-        utils.validate_adapter_class(storage_adapter, StorageAdapter)
+        utils.validate_adapter_class(storage_adapter, StorageAdapterNew)
 
         # Logic adapters used by the chat bot
         self.logic_adapters = []
@@ -28,8 +27,8 @@ class ChatBot(object):
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
 
         primary_search_algorithm = IndexedTextSearch(self, **kwargs)
-        text_search_algorithm = TextSearch(self, **kwargs)
-
+        #text_search_algorithm = TextSearch(self, **kwargs)
+        text_search_algorithm = primary_search_algorithm
         self.search_algorithms = {
             primary_search_algorithm.name: primary_search_algorithm,
             text_search_algorithm.name: text_search_algorithm
