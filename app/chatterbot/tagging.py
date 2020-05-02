@@ -1,5 +1,5 @@
-#import sys
-#sys.path.append('../../..')
+import sys
+sys.path.append('../../')
 import string
 from app.chatterbot import languages
 from spacy.lang.zh import Chinese
@@ -73,5 +73,5 @@ class PosLemmaTagger(object):
 
 if __name__ == '__main__':
     tagger = PosLemmaTagger()
-    text = tagger.get_text_index_string('你是谁?')
+    text = tagger.get_text_index_string('a rule tells the bot how to speak')
     print(text)
