@@ -2,11 +2,12 @@ from flask import Flask
 from flask import Blueprint
 from flask import request, jsonify, make_response
 from app.chatterbot_api.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
+from app.chatterbot_api.chatterbot import languages
 import logging
 import json
 
 bp_manager = Blueprint('/admin', __name__)
-db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3')
+db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
 
 
 @bp_manager.route('/test')
@@ -17,7 +18,6 @@ def test():
 @bp_manager.route('/init_db')
 def init_db():
     db.create_rule(
-        id=1,
         text="test rule",
         in_response_to="rule 1!"
     )
@@ -64,8 +64,8 @@ def init_db():
     )
 
     data = {
-        'r_num': db.count('statementrules'),
-        's_num': db.count('statement')
+        'r_num': db.count_by_name('statementrules'),
+        's_num': db.count_by_name('statement')
     }
     return _make_response(data)
 
@@ -135,36 +135,42 @@ def create():
 
     # 调用数据接口
     code = 0
-    db.create_text(
+    new_statement = db.create_text(
         text=s_text,
         in_response_to=s_response,
         tags=tag_list
     )
 
-    new_statement = {'text': s_text, 'in_response_to': s_response, 'tags': tags}
-    code = 1
+    # new_statement = {'text': s_text, 'in_response_to': s_response, 'tags': tags}
+    if new_statement is None:
+        code = 0
+    else:
+        code = 1
 
     # 调用数据接口
-    result = {'code': code, 'statement': new_statement}
+    result = {'code': code, 'statement': _statement2dict(new_statement)}
     return _make_response(result)
 
 
 @bp_manager.route('/create_rule', methods=['POST'])
 def create_rule():
     data = json.loads(request.get_data(as_text=True))
-    r_text = request.form['text']
-    r_response = request.form['response']
+    r_text = data['text']
+    r_response = data['response']
     # 调用数据接口
     code = 0
-    db.create_rule(
+    new_rule = db.create_rule(
         text=r_text,
         in_response_to=r_response
     )
-    new_rule = {'text': r_text, 'in_response_to': r_response}
-    code = 1
+    # new_rule = {'text': r_text, 'in_response_to': r_response}
+    if new_rule is None:
+        code = 0
+    else:
+        code = 1
 
     # 调用数据接口
-    data = {'code': code, 'statement': new_rule}
+    data = {'code': code, 'rule': _rule2dict(new_rule)}
     return _make_response(data)
 
 
@@ -256,6 +262,7 @@ def delete_statement():
     statement_id = request.args.get("sid")
     # 调用数据接口
     code = 1
+    db.remove_text_by_id(statement_id)
 
     # 调用数据接口
     data = {'code': code}
@@ -267,6 +274,7 @@ def delete_rule():
     rule_id = request.args.get("rid")
     # 调用数据接口
     code = 1
+    db.remove_rule_by_id(rule_id)
 
     # 调用数据接口
     data = {'code': code}
@@ -277,12 +285,14 @@ def delete_rule():
 def delete_all_statement():
     statement_text = request.args.get("text")
     # 调用数据接口
-    number = 0
+    number = len(list(db.filter_text(text=statement_text)))
 
     # 调用数据接口
     data = {'code': 0, 'number': number}
     if number > 0:
         data['code'] = 1
+        db.remove_text_by_text(statement_text)
+
     return _make_response(data)
 
 
@@ -290,10 +300,11 @@ def delete_all_statement():
 def delete_all_rule():
     rule_text = request.args.get("text")
     # 调用数据接口
-    number = 0
+    number = len(list(db.filter_rules_by_text(text=rule_text)))
 
     # 调用数据接口
     data = {'code': 0, 'number': number}
     if number > 0:
         data['code'] = 1
+        db.remove_rule_by_text(rule_text)
     return _make_response(data)
