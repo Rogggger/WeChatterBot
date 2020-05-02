@@ -97,8 +97,12 @@ class SpacySimilarity(Comparator):
     def __init__(self, language,**kwargs):
         super().__init__(language,**kwargs)
         import spacy
-
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        language = self.language.ISO_639_1.lower()
+        if language == 'zh':
+            from spacy.lang.zh import Chinese
+            self.nlp = Chinese()
+        else:
+            self.nlp = spacy.load(language)
 
     def compare(self, statement_a, statement_b):
         """
