@@ -5,6 +5,8 @@ from app.chatterbot_api.chatterbot.storage.sql_storage_new import SQLStorageAdap
 from app.chatterbot_api.chatterbot import languages
 import logging
 import json
+from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.conversation import StatementRules
 
 bp_manager = Blueprint('/admin', __name__)
 db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
@@ -177,35 +179,36 @@ def create_rule():
 @bp_manager.route('/update_statement', methods=['POST'])
 def update():
     data = json.loads(request.get_data(as_text=True))
-    print(data['text'])
-    id = data['id']
+    s_id = data['id']
     text = data['text']
     response = data['response']
     tags = data['tags']
-    search_text = data['text']
-    search_response = data['response']
     tag_list = tags.split('+')
     # 调用数据接口
-    code = 0
-    new_statement = {}
-
+    code = 1
+    new_statement = Statement(text=text, in_response_to=response, id=s_id, tags=tag_list)
+    db.update_text(new_statement)
+    # db.update_text(Statement(text="I am angry.", in_response_to="sometimes naive!", id=1))
     # 调用数据接口
-    result = {'code': code, 'statement': new_statement}
+    result = {'code': code}
     return _make_response(result)
 
 
 @bp_manager.route('/update_rule', methods=['POST'])
 def update_rule():
-    post_id = request.form['id']
-    post_text = request.form['text']
-    post_response = request.form['response']
-    # 调用数据接口
-    code = 0
-    new_rule = {}
+    data = json.loads(request.get_data(as_text=True))
+    r_id = data['id']
+    text = data['text']
+    response = data['response']
 
     # 调用数据接口
-    data = {'code': code, 'statement': new_rule}
-    return _make_response(data)
+    code = 1
+    new_rule = StatementRules(text=text, in_response_to=response, id=r_id)
+    db.update_rule(new_rule)
+    # db.update_text(Statement(text="I am angry.", in_response_to="sometimes naive!", id=1))
+    # 调用数据接口
+    result = {'code': code}
+    return _make_response(result)
 
 
 @bp_manager.route('/search_statement')
@@ -230,7 +233,7 @@ def query():
 
     # 调用数据接口
     data = {'code': code, 'number': number, 'statements': dict_statements}
-    print(data)
+    # print(data)
     return _make_response(data)
 
 
@@ -274,7 +277,7 @@ def delete_rule():
     rule_id = request.args.get("rid")
     # 调用数据接口
     code = 1
-    db.remove_rule_by_id(rule_id)
+    db.remove_rules_by_id(rule_id)
 
     # 调用数据接口
     data = {'code': code}
@@ -306,5 +309,5 @@ def delete_all_rule():
     data = {'code': 0, 'number': number}
     if number > 0:
         data['code'] = 1
-        db.remove_rule_by_text(rule_text)
+        db.remove_rules_by_text(rule_text)
     return _make_response(data)
