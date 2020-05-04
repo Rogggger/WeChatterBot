@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../../')
 import string
 from app.chatterbot import languages
 from spacy.lang.zh import Chinese
@@ -13,7 +11,8 @@ class LowercaseTagger(object):
     def __init__(self, language=None):
         self.language = language or languages.ENG
 
-    def get_text_index_string(self, text):
+    @staticmethod
+    def get_text_index_string(text):
         return text.lower()
 
 
@@ -23,8 +22,8 @@ class PosLemmaTagger(object):
         import spacy
         self.language = language or languages.ENG
         punc = "！？｡＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏."
-        #punc = punc.decode("utf-8")
-        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation+punc))
+        # punc = punc.decode("utf-8")
+        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation + punc))
         language = self.language.ISO_639_1.lower()
         if language == 'zh':
             self.nlp = Chinese()
@@ -35,13 +34,11 @@ class PosLemmaTagger(object):
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """
-        bigram_pairs = []
 
         if len(text) <= 2:
             text_without_punctuation = text.translate(self.punctuation_table)
             if len(text_without_punctuation) >= 1:
                 text = text_without_punctuation
-        document = self.nlp(text)
         document = self.nlp(text)
         if len(text) <= 2:
             bigram_pairs = [
@@ -58,11 +55,6 @@ class PosLemmaTagger(object):
                 ]
             tokens = [token.lemma_.lower() for token in tokens]
             return ' '.join(tokens)
-            for index in range(1, len(tokens)):
-                bigram_pairs.append('{}:{}'.format(
-                    tokens[index - 1].pos_,
-                    tokens[index].lemma_.lower()
-                ))
 
         if not bigram_pairs:
             bigram_pairs = [
@@ -70,8 +62,3 @@ class PosLemmaTagger(object):
             ]
 
         return ' '.join(bigram_pairs)
-
-if __name__ == '__main__':
-    tagger = PosLemmaTagger()
-    text = tagger.get_text_index_string('a rule tells the bot how to speak')
-    print(text)
