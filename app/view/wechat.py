@@ -4,17 +4,15 @@ import xml.etree.cElementTree as et
 
 from flask import request, Blueprint
 
-from app.wechat import msg_template as mt
+from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, reply_template
 from app.libs.http import error_jsonify
 
-wx_response = Blueprint('/api', __name__)
-
-WECHAT_TOKEN = 'gintoki'
+bp_wechat = Blueprint('/wx', __name__)
 
 
 def get_reply(type, question):
     if type == 'text':
-        return question  # chatterbot_api
+        return question
     elif type == 'voice':
         return '风太大听不清还是用文字跟我聊天吧'
     elif type == 'event':
@@ -23,14 +21,14 @@ def get_reply(type, question):
         return '看不懂诶'
 
 
-@wx_response.route('/wx', methods=['GET', 'POST'])
+@bp_wechat.route('/', methods=['GET', 'POST'])
 def wechat():
     if request.method == 'GET':
         data = request.args
-        req = {k: data[k] for k in mt.signature_key if data.get(k) is not None}
+        req = {k: data[k] for k in SIGNATURE_KEYS if data.get(k) is not None}
         check_keys = ('signature', 'timestamp', 'nonce')
         if not all(k in req for k in check_keys):
-            error_jsonify(100001)
+            return error_jsonify(100001)
 
         lis = [WECHAT_TOKEN, req['timestamp'], req['nonce']]
         lis.sort()
@@ -39,15 +37,17 @@ def wechat():
         sign = hashlib.sha1(temp_str).hexdigest()
 
         if req['signature'] != sign:
-            error_jsonify(100002)
+            return error_jsonify(100002)
         else:
             return req['echostr']
 
     if request.method == 'POST':
         xml_rec = et.fromstring(request.get_data())
 
-        req = {k: xml_rec.find(k) for k in mt.msg_key}
-        content = get_reply(req['MsgType'], req['Content'])  # 根据信息类型获得回复
+        req = {k: xml_rec.find(k) for k in MSG_KEYS}
+        reply = get_reply(req['MsgType'], req['Content'])  # 根据信息类型获得回复
 
-        return mt.reply_template(req['MsgType']) % (
-            req['FromUserName'], req['ToUserName'], int(time.time()), content)
+        if req['MsgType'] == 'text':
+            return reply_template(req['FromUserName'], req['ToUserName'], int(time.time()), reply)
+        else:
+            return error_jsonify(100003)

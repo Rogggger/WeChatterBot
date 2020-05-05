@@ -1,7 +1,7 @@
-signature_key = ['signature', 'timestamp', 'nonce', 'echostr']
-msg_key = ['ToUserName', 'FromUserName', 'MsgType', 'Content']
+SIGNATURE_KEYS = ['signature', 'timestamp', 'nonce', 'echostr']
+MSG_KEYS = ['ToUserName', 'FromUserName', 'MsgType', 'Content']
 
-reply_str = '''<xml>
+REPLY_STR = '''<xml>
                 <ToUserName>![CDATA[%s]]</ToUserName>
                 <FromUserName>![CDATA[%s]]</FromUserName>
                 <CreateTime>%s</CreateTime>
@@ -9,7 +9,8 @@ reply_str = '''<xml>
                 <Content>![CDATA[%s]]</Content>
                 </xml>'''
 
+WECHAT_TOKEN = 'gintoki'
 
-def reply_template(type):
-    if type == 'text':
-        return reply_str
+
+def reply_template(fr, to, time, reply):
+    return REPLY_STR % (fr, to, int(time.time()), reply)
