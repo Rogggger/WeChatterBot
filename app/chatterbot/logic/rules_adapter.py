@@ -27,6 +27,6 @@ class RulesResponseAdapter(LogicAdapter):
         for rule in rules_list:
             if statement.text == rule.text:
                 response = Statement(text=rule.in_response_to)
-                rule.confidence=1
+                response.confidence=10
                 break
         return response

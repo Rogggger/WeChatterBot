@@ -155,7 +155,6 @@ class ChatBot(object):
                         adapter.class_name, output.text, output.confidence
                     )
                 )
-
                 if output.confidence > max_confidence:
                     result = output
                     max_confidence = output.confidence

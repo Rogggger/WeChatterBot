@@ -66,7 +66,6 @@ class W2vSimilarity(Comparator):
         import gensim
         import numpy as np
         import jieba
-        print('init w2v')
         w2vpath=kwargs.get('w2vpath','D:\\cocde\\chatbot\\news_12g_baidubaike_20g_novel_90g_embedding_64.bin')
         self.model = gensim.models.KeyedVectors.load_word2vec_format(w2vpath, binary=True)
         self.np = np
