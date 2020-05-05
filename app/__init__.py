@@ -1,4 +1,5 @@
 from flask import Flask
+
 from app.chatterbot_api.get_response import bp_response
 from app.view.wechat import bp_wechat
 
