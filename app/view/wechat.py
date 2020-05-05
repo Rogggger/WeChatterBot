@@ -28,7 +28,7 @@ def wechat():
         req = {k: data[k] for k in SIGNATURE_KEYS if data.get(k) is not None}
         check_keys = ('signature', 'timestamp', 'nonce')
         if not all(k in req for k in check_keys):
-            return error_jsonify(100001)
+            return error_jsonify(10000001)
 
         lis = [WECHAT_TOKEN, req['timestamp'], req['nonce']]
         lis.sort()
@@ -37,7 +37,7 @@ def wechat():
         sign = hashlib.sha1(temp_str).hexdigest()
 
         if req['signature'] != sign:
-            return error_jsonify(100002)
+            return error_jsonify(10000002)
         else:
             return req['echostr']
 
@@ -47,7 +47,4 @@ def wechat():
         req = {k: xml_rec.find(k) for k in MSG_KEYS}
         reply = get_reply(req['MsgType'], req['Content'])  # 根据信息类型获得回复
 
-        if req['MsgType'] == 'text':
-            return reply_template(req['FromUserName'], req['ToUserName'], int(time.time()), reply)
-        else:
-            return error_jsonify(100003)
+        return reply_template(req['FromUserName'], req['ToUserName'], int(time.time()), reply)
