@@ -11,8 +11,7 @@ class LowercaseTagger(object):
     def __init__(self, language=None):
         self.language = language or languages.ENG
 
-    @staticmethod
-    def get_text_index_string(text):
+    def get_text_index_string(self, text):
         return text.lower()
 
 
@@ -54,11 +53,12 @@ class PosLemmaTagger(object):
                     token for token in document if token.is_alpha
                 ]
             tokens = [token.lemma_.lower() for token in tokens]
+            # if not bigram_pairs:
+            #     bigram_pairs = [
+            #         token.lemma_.lower() for token in document
+            #     ]
+            #
+            # return ' '.join(bigram_pairs)
             return ' '.join(tokens)
 
-        if not bigram_pairs:
-            bigram_pairs = [
-                token.lemma_.lower() for token in document
-            ]
 
-        return ' '.join(bigram_pairs)
