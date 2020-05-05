@@ -1,5 +1,5 @@
 from flask import Flask
-from app.chatterbot_api.get_response import bp_response
+from app.view.get_response import bp_response
 #from app.libs.login import login_manager
 #from app.libs.db import db
 #from app.view.user.helloworld import bp_hello_world
