@@ -7,7 +7,7 @@ from flask import request, Blueprint
 from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, reply_template
 from app.libs.http import error_jsonify
 
-bp_wechat = Blueprint('wx', __name__,url_prefix='/wx')
+bp_wechat = Blueprint('wx', __name__, url_prefix='/wx')
 
 
 def get_reply(type, question):
