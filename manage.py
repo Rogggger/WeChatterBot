@@ -20,7 +20,7 @@ manager.add_command('runserver', Server(
     port=5000
     # ssl_crt='/etc/letsencrypt/live/yuanw.wang/fullchain.pem',
     # ssl_key='/etc/letsencrypt/live/yuanw.wang/privkey.pem'
-    )
+)
 )
 
 if __name__ == '__main__':
