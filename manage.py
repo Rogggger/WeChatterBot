@@ -1,18 +1,8 @@
 from flask_script import Manager, Server
 from app import create_app
-from app.libs.db import db
-import config
 
-app = create_app(config)
+app = create_app()
 manager = Manager(app)
-
-
-@manager.command
-def createdb():
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-
 
 manager.add_command('runserver', Server(
     use_reloader=True,
