@@ -5,7 +5,7 @@ from app.chatterbot.trainers import ChatterBotCorpusTrainer
 from app.chatterbot import *
 from app.chatterbot import response_selection
 from app.chatterbot.trainers import ChatterBotCorpusTrainer
-bp_response = Blueprint('/chatterbot', __name__)
+bp_response = Blueprint('chatterbot', __name__,url_prefix='/chatterbot')
 
 chatbot = chatterbot.ChatBot(
     "My ChatterBot",
