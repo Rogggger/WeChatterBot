@@ -6,7 +6,7 @@ import json
 from app.chatterbot.conversation import Statement
 from app.chatterbot.conversation import StatementRules
 
-bp_manager = Blueprint('/admin', __name__)
+bp_manager = Blueprint('admin', __name__, url_prefix='/admin')
 db = SQLStorageAdapterNew(
     database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
 
