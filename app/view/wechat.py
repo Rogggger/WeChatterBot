@@ -6,13 +6,15 @@ from flask import request, Blueprint
 
 from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, reply_template
 from app.libs.http import error_jsonify
+from app.libs.chatbot import chatbot
 
 bp_wechat = Blueprint('wx', __name__, url_prefix='/wx')
 
 
 def get_reply(type, question):
     if type == 'text':
-        return question
+        response = chatbot.get_response(question)
+        return response.text
     elif type == 'voice':
         return '风太大听不清还是用文字跟我聊天吧'
     elif type == 'event':
