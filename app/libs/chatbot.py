@@ -1,5 +1,4 @@
 from app import chatterbot
-from app.chatterbot import languages
 from app.chatterbot import response_selection
 from app.chatterbot import comparisons
 from app.chatterbot.trainers import ChatterBotCorpusTrainer
