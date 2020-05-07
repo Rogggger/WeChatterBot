@@ -1,9 +1,7 @@
-from flask import Flask
 from flask import Blueprint
-from flask import request, jsonify, make_response
+from flask import request, make_response
 from app.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
 from app.chatterbot import languages
-import logging
 import json
 from app.chatterbot.conversation import Statement
 from app.chatterbot.conversation import StatementRules
@@ -144,7 +142,6 @@ def create():
         tags=tag_list
     )
 
-    # new_statement = {'text': s_text, 'in_response_to': s_response, 'tags': tags}
     if new_statement is None:
         code = 0
     else:
@@ -190,7 +187,6 @@ def update():
     new_statement = Statement(
         text=text, in_response_to=response, id=s_id, tags=tag_list)
     db.update_text(new_statement)
-    # db.update_text(Statement(text="I am angry.", in_response_to="sometimes naive!", id=1))
     # 调用数据接口
     result = {'code': code}
     return _make_response(result)
@@ -207,7 +203,6 @@ def update_rule():
     code = 1
     new_rule = StatementRules(text=text, in_response_to=response, id=r_id)
     db.update_rule(new_rule)
-    # db.update_text(Statement(text="I am angry.", in_response_to="sometimes naive!", id=1))
     # 调用数据接口
     result = {'code': code}
     return _make_response(result)
