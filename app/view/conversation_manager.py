@@ -1,12 +1,12 @@
 from flask import Flask
 from flask import Blueprint
 from flask import request, jsonify, make_response
-from app.chatterbot_api.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
-from app.chatterbot_api.chatterbot import languages
+from app.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
+from app.chatterbot import languages
 import logging
 import json
-from app.chatterbot_api.chatterbot.conversation import Statement
-from app.chatterbot_api.chatterbot.conversation import StatementRules
+from app.chatterbot.conversation import Statement
+from app.chatterbot.conversation import StatementRules
 
 bp_manager = Blueprint('/admin', __name__)
 db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
