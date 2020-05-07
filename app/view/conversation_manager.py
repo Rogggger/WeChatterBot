@@ -9,7 +9,8 @@ from app.chatterbot.conversation import Statement
 from app.chatterbot.conversation import StatementRules
 
 bp_manager = Blueprint('/admin', __name__)
-db = SQLStorageAdapterNew(database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
+db = SQLStorageAdapterNew(
+    database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
 
 
 @bp_manager.route('/test')
@@ -186,7 +187,8 @@ def update():
     tag_list = tags.split('+')
     # 调用数据接口
     code = 1
-    new_statement = Statement(text=text, in_response_to=response, id=s_id, tags=tag_list)
+    new_statement = Statement(
+        text=text, in_response_to=response, id=s_id, tags=tag_list)
     db.update_text(new_statement)
     # db.update_text(Statement(text="I am angry.", in_response_to="sometimes naive!", id=1))
     # 调用数据接口
