@@ -13,7 +13,7 @@ bp_wechat = Blueprint('wx', __name__, url_prefix='/wx')
 
 def get_reply(type, question):
     if type == 'text':
-        #response = chatbot.get_response(question)
+        # response = chatbot.get_response(question)
         # return response.text
         return question
     elif type == 'voice':
