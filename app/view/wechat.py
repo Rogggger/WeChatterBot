@@ -53,13 +53,11 @@ def wechat():
         req = {k: xml_rec.find(k) for k in MSG_KEYS}
 
         check_keys = ('MsgType', 'Content')
-        if not all(k in req for k in check_keys):
+        if not all(req[k] is not None for k in check_keys):
             if req['MsgType'] == 'event':  # 接收事件推送
                 req['Content'] = xml_rec.find('Event')
             else:
                 return error_jsonify(10000001)
-        elif not all(req[k] is not None for k in check_keys):
-            return error_jsonify(10000001)
 
         reply = get_reply(req['MsgType'], req['Content'])  # 根据消息类型获得回复
 
