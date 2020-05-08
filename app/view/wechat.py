@@ -16,9 +16,14 @@ def get_reply(type, question):
         response = chatbot.get_response(question)
         return response.text
     elif type == 'voice':
-        return '风太大听不清还是用文字跟我聊天吧'
-    elif type == 'event':
-        return '来啦老弟欢迎关注'  # 订阅事件信息
+        return '风太大听不清还是用文字跟我聊天吧>.<'
+    elif type == 'event':  # 事件推送的回复
+        if question == 'subscribe':
+            return '你好哇，我是WeChatterBot!'
+        elif question == 'unsubscribe':
+            return '再见，有空再来找我玩~'
+        else:
+            return '哈哈哈哈'
     else:
         return '看不懂诶'
 
@@ -45,8 +50,15 @@ def wechat():
 
     if request.method == 'POST':
         xml_rec = et.fromstring(request.get_data())
-
         req = {k: xml_rec.find(k) for k in MSG_KEYS}
-        reply = get_reply(req['MsgType'], req['Content'])  # 根据信息类型获得回复
+
+        if req['MsgType'] is None:
+            return error_jsonify(10000001)
+        if req['MsgType'] == 'event':
+            req['Content'] = xml_rec.find('Event')
+        if req['Content'] is None:
+            return error_jsonify(10000001)
+
+        reply = get_reply(req['MsgType'], req['Content'])  # 根据消息类型获得回复
 
         return reply_template(req['FromUserName'], req['ToUserName'], int(time.time()), reply)
