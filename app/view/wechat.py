@@ -52,12 +52,11 @@ def wechat():
         xml_rec = et.fromstring(request.get_data())
         req = {k: xml_rec.find(k) for k in MSG_KEYS}
 
-        if req['MsgType'] is not None:
-            if req['MsgType'] == 'event' and xml_rec.find('Event') is not None:
-                req['Content'] = xml_rec.find('Event')
-            elif req['Content'] is None:
-                return error_jsonify(10000001)
-        else:
+        if req['MsgType'] is None:
+            return error_jsonify(10000001)
+        if req['MsgType'] == 'event':
+            req['Content'] = xml_rec.find('Event')
+        if req['Content'] is None:
             return error_jsonify(10000001)
 
         reply = get_reply(req['MsgType'], req['Content'])  # 根据消息类型获得回复
