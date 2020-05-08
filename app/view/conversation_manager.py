@@ -60,6 +60,7 @@ def create():
         return error_jsonify_cors(10000041)
     except Exception:
         traceback.print_exc()
+        return error_jsonify_cors(10000002)
 
     check_keys = ('text', 'response')
     if not all(k in data for k in check_keys):
@@ -98,6 +99,7 @@ def create_rule():
         return error_jsonify_cors(10000041)
     except Exception:
         traceback.print_exc()
+        return error_jsonify_cors(10000002)
 
     check_keys = ('text', 'response')
     if not all(k in data for k in check_keys):
@@ -131,6 +133,7 @@ def update():
         return error_jsonify_cors(10000041)
     except Exception:
         traceback.print_exc()
+        return error_jsonify_cors(10000002)
 
     check_keys = ('id', 'text', 'response')
     if not all(k in data for k in check_keys):
@@ -139,7 +142,7 @@ def update():
     text = data['text']
     response = data['response']
     tag_list = []
-    if 'tag' in data:
+    if 'tags' in data:
         tags = data['tags']
         tag_list = tags.split('+')
     # 调用数据接口
@@ -161,8 +164,9 @@ def update_rule():
         return error_jsonify_cors(10000041)
     except Exception:
         traceback.print_exc()
+        return error_jsonify_cors(10000002)
 
-    check_keys = ('text', 'response','id')
+    check_keys = ('text', 'response', 'id')
     if not all(k in data for k in check_keys):
         return error_jsonify_cors(10000001)
     r_id = data['id']
@@ -203,7 +207,7 @@ def query():
     return jsonify_cors(data)
 
 
-@bp_manager.route('/search_rule')
+@bp_manager.route('/search_rule', methods=['GET'])
 def query_rule():
     r_text = request.args.get("text")
     r_id = request.args.get("id")
@@ -226,7 +230,7 @@ def query_rule():
     return jsonify_cors(data)
 
 
-@bp_manager.route('/delete_statement')
+@bp_manager.route('/delete_statement', methods=['GET'])
 def delete_statement():
     statement_id = request.args.get("sid")
     if statement_id == '' or statement_id is None:
@@ -240,7 +244,7 @@ def delete_statement():
     return jsonify_cors(data)
 
 
-@bp_manager.route('/delete_rule')
+@bp_manager.route('/delete_rule', methods=['GET'])
 def delete_rule():
     rule_id = request.args.get("rid")
     if rule_id == '' or rule_id is None:
