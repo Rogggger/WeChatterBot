@@ -1,83 +1,14 @@
 from flask import Blueprint
-from flask import request, make_response
-from app.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
-from app.chatterbot import languages
+from flask import request
 import json
 from app.chatterbot.conversation import Statement
 from app.chatterbot.conversation import StatementRules
+from app.libs.chatbot import chatbot
+from app.libs.http import error_jsonify_cors, jsonify_cors
+import traceback
 
 bp_manager = Blueprint('admin', __name__, url_prefix='/admin')
-db = SQLStorageAdapterNew(
-    database_uri='sqlite:///db.sqlite3',  tagger_language=languages.CHI)
-
-
-@bp_manager.route('/test')
-def test():
-    return "Hello, Conversation Manager"
-
-
-@bp_manager.route('/init_db')
-def init_db():
-    db.create_rule(
-        text="test rule",
-        in_response_to="rule 1!"
-    )
-    db.create_rule(
-        text="search test rule",
-        in_response_to="rule 2!"
-    )
-    db.create_rule(
-        text="search test rule 2",
-        in_response_to="rule 3!"
-    )
-    db.create_rule(
-        text="update test rule",
-        in_response_to="rule 4!"
-    )
-    db.create_rule(
-        text="delete test rule",
-        in_response_to="rule 5!"
-    )
-    db.create_text(
-        text="test statement",
-        in_response_to="statement 1!"
-    )
-    db.create_text(
-        text="search test statement",
-        in_response_to="statement 2!"
-    )
-    db.create_text(
-        text="search test statement",
-        in_response_to="statement 3!"
-    )
-    db.create_text(
-        text="update test statement",
-        in_response_to="statement 4!"
-    )
-    db.create_text(
-        text="delete test statement",
-        in_response_to="statement 5!"
-    )
-    db.create_text(
-        text="text statement with tags",
-        in_response_to="cant live without tags",
-        tags=["test"]
-    )
-
-    data = {
-        'r_num': db.count_by_name('statementrules'),
-        's_num': db.count_by_name('statement')
-    }
-    return _make_response(data)
-
-
-def _make_response(data):
-    res = make_response(data)
-    res.headers['Access-Control-Allow-Origin'] = '*'
-    res.headers['Access-Control-Allow-Method'] = '*'
-    res.headers['Access-Control-Allow-Headers'] = '*'
-    # print(res)
-    return res
+db = chatbot.storage
 
 
 def _statement2dict(s):
@@ -101,39 +32,45 @@ def _rule2dict(r):
     }
 
 
-@bp_manager.route('/login')
+@bp_manager.route('/login', methods=['GET'])
 def admin_login():
-    username = request.args.get("username")
-    password = request.args.get("password")
-    data = {'code': 0, 'username': username}
-    if username == 'wechatterbot' and password == 'buaawechatterbot':
-        data['code'] = 1
-        return _make_response(data)
-    else:
-        data['code'] = 0
-        data['username'] = ''
-        return _make_response(data)
+    data = request.args
+    check_keys = ('username', 'password')
+    keys = ('username', 'password')
+    req = {k: data[k] for k in keys if data.get(k) is not None}
+    if not all(k in req for k in check_keys):
+        return error_jsonify_cors(10000001)
 
-
-@bp_manager.route('/get_user/<user_id>')
-def get_user(user_id):
-    data = {'code': 0, 'username': 'wechatterbot'}
-    if user_id == 1:
-        return _make_response(data)
+    data = {'username': req['username'], 'userId': 1}
+    if req['username'] == 'wechatterbot':
+        if req['password'] == 'buaawechatterbot':
+            return jsonify_cors(data)
+        else:
+            return error_jsonify_cors(10000013)
     else:
-        data['username'] = ''
-        return _make_response(data)
+        return error_jsonify_cors(10000012)
 
 
 @bp_manager.route('/create_statement', methods=['POST'])
 def create():
-    data = json.loads(request.get_data(as_text=True))
-    print(data['text'])
+    data = {}
+    try:
+        data = json.loads(request.get_data(as_text=True))
+    except ValueError:
+        return error_jsonify_cors(10000041)
+    except Exception:
+        traceback.print_exc()
+
+    check_keys = ('text', 'response')
+    if not all(k in data for k in check_keys):
+        return error_jsonify_cors(10000001)
+
     s_text = data['text']
     s_response = data['response']
-    tags = data['tags']
-    tag_list = tags.split('+')
-
+    tag_list = []
+    if 'tags' in data:
+        tags = data['tags']
+        tag_list = tags.split('+')
     # 调用数据接口
     code = 0
     new_statement = db.create_text(
@@ -149,12 +86,23 @@ def create():
 
     # 调用数据接口
     result = {'code': code, 'statement': _statement2dict(new_statement)}
-    return _make_response(result)
+    return jsonify_cors(result)
 
 
 @bp_manager.route('/create_rule', methods=['POST'])
 def create_rule():
-    data = json.loads(request.get_data(as_text=True))
+    data = {}
+    try:
+        data = json.loads(request.get_data(as_text=True))
+    except ValueError:
+        return error_jsonify_cors(10000041)
+    except Exception:
+        traceback.print_exc()
+
+    check_keys = ('text', 'response')
+    if not all(k in data for k in check_keys):
+        return error_jsonify_cors(10000001)
+
     r_text = data['text']
     r_response = data['response']
     # 调用数据接口
@@ -171,30 +119,52 @@ def create_rule():
 
     # 调用数据接口
     data = {'code': code, 'rule': _rule2dict(new_rule)}
-    return _make_response(data)
+    return jsonify_cors(data)
 
 
 @bp_manager.route('/update_statement', methods=['POST'])
 def update():
-    data = json.loads(request.get_data(as_text=True))
+    data = {}
+    try:
+        data = json.loads(request.get_data(as_text=True))
+    except ValueError:
+        return error_jsonify_cors(10000041)
+    except Exception:
+        traceback.print_exc()
+
+    check_keys = ('id', 'text', 'response')
+    if not all(k in data for k in check_keys):
+        return error_jsonify_cors(10000001)
     s_id = data['id']
     text = data['text']
     response = data['response']
-    tags = data['tags']
-    tag_list = tags.split('+')
+    tag_list = []
+    if 'tag' in data:
+        tags = data['tags']
+        tag_list = tags.split('+')
     # 调用数据接口
     code = 1
     new_statement = Statement(
         text=text, in_response_to=response, id=s_id, tags=tag_list)
     db.update_text(new_statement)
     # 调用数据接口
-    result = {'code': code}
-    return _make_response(result)
+    result = {'code': code, 'statement': _statement2dict(new_statement)}
+    return jsonify_cors(result)
 
 
 @bp_manager.route('/update_rule', methods=['POST'])
 def update_rule():
-    data = json.loads(request.get_data(as_text=True))
+    data = {}
+    try:
+        data = json.loads(request.get_data(as_text=True))
+    except ValueError:
+        return error_jsonify_cors(10000041)
+    except Exception:
+        traceback.print_exc()
+
+    check_keys = ('text', 'response','id')
+    if not all(k in data for k in check_keys):
+        return error_jsonify_cors(10000001)
     r_id = data['id']
     text = data['text']
     response = data['response']
@@ -204,34 +174,33 @@ def update_rule():
     new_rule = StatementRules(text=text, in_response_to=response, id=r_id)
     db.update_rule(new_rule)
     # 调用数据接口
-    result = {'code': code}
-    return _make_response(result)
+    result = {'code': code, 'rule': _rule2dict(new_rule)}
+    return jsonify_cors(result)
 
 
-@bp_manager.route('/search_statement')
+@bp_manager.route('/search_statement', methods=['GET'])
 def query():
     s_text = request.args.get("text")
     s_id = request.args.get("id")
-    # logging.info("aass")
     # 调用数据接口
-    code = 0
-    number = 0
-    if s_id != '':
+    if s_id is not None and s_id != '':
         statements = list(db.filter_text(id=s_id))
-    else:
+    elif s_text is not None and s_text != '':
         statements = list(db.filter_text(text=s_text))
+    else:
+        return error_jsonify_cors(10000001)
     number = len(statements)
     code = 1
 
     dict_statements = []
     for s in statements:
-        print(s.text)
+        # print(s.text)
         dict_statements.append(_statement2dict(s))
 
     # 调用数据接口
     data = {'code': code, 'number': number, 'statements': dict_statements}
     # print(data)
-    return _make_response(data)
+    return jsonify_cors(data)
 
 
 @bp_manager.route('/search_rule')
@@ -239,12 +208,12 @@ def query_rule():
     r_text = request.args.get("text")
     r_id = request.args.get("id")
     # 调用数据接口
-    code = 0
-    number = 0
-    if r_id != '':
+    if r_id != ''and r_id is not None:
         rules = list(db.filter_rules(id=r_id))
-    else:
+    elif r_text != ''and r_text is not None:
         rules = list(db.filter_rules(text=r_text))
+    else:
+        return error_jsonify_cors(10000001)
     number = len(rules)
     code = 1
 
@@ -254,57 +223,32 @@ def query_rule():
 
     # 调用数据接口
     data = {'code': code, 'number': number, 'rules': dict_rules}
-    return _make_response(data)
+    return jsonify_cors(data)
 
 
 @bp_manager.route('/delete_statement')
 def delete_statement():
     statement_id = request.args.get("sid")
+    if statement_id == '' or statement_id is None:
+        return error_jsonify_cors(10000001)
     # 调用数据接口
     code = 1
     db.remove_text_by_id(statement_id)
 
     # 调用数据接口
     data = {'code': code}
-    return _make_response(data)
+    return jsonify_cors(data)
 
 
 @bp_manager.route('/delete_rule')
 def delete_rule():
     rule_id = request.args.get("rid")
+    if rule_id == '' or rule_id is None:
+        return error_jsonify_cors(10000001)
     # 调用数据接口
     code = 1
     db.remove_rules_by_id(rule_id)
 
     # 调用数据接口
     data = {'code': code}
-    return _make_response(data)
-
-
-@bp_manager.route('/delete_all_statement')
-def delete_all_statement():
-    statement_text = request.args.get("text")
-    # 调用数据接口
-    number = len(list(db.filter_text(text=statement_text)))
-
-    # 调用数据接口
-    data = {'code': 0, 'number': number}
-    if number > 0:
-        data['code'] = 1
-        db.remove_text_by_text(statement_text)
-
-    return _make_response(data)
-
-
-@bp_manager.route('/delete_all_rule')
-def delete_all_rule():
-    rule_text = request.args.get("text")
-    # 调用数据接口
-    number = len(list(db.filter_rules_by_text(text=rule_text)))
-
-    # 调用数据接口
-    data = {'code': 0, 'number': number}
-    if number > 0:
-        data['code'] = 1
-        db.remove_rules_by_text(rule_text)
-    return _make_response(data)
+    return jsonify_cors(data)
