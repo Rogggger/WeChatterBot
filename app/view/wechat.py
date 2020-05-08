@@ -54,11 +54,12 @@ def wechat():
 
         if req['MsgType'] is None:
             return error_jsonify(10000001)
-        if req['MsgType'] == 'event':
+        if req['MsgType'].text == 'event':
             req['Content'] = xml_rec.find('Event')
         if req['Content'] is None:
             return error_jsonify(10000001)
 
-        reply = get_reply(req['MsgType'], req['Content'])  # 根据消息类型获得回复
+        reply = get_reply(req['MsgType'].text,
+                          req['Content'].text)  # 根据消息类型获得回复
 
-        return reply_template(req['FromUserName'], req['ToUserName'], int(time.time()), reply)
+        return reply_template(req['FromUserName'].text, req['ToUserName'].text, int(time.time()), reply)
