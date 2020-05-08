@@ -13,8 +13,9 @@ bp_wechat = Blueprint('wx', __name__, url_prefix='/wx')
 
 def get_reply(type, question):
     if type == 'text':
-        response = chatbot.get_response(question)
-        return response.text
+        # response = chatbot.get_response(question)
+        # return response.text
+        return question
     elif type == 'voice':
         return '风太大听不清还是用文字跟我聊天吧>.<'
     elif type == 'event':  # 事件推送的回复
