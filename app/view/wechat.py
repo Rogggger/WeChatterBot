@@ -24,7 +24,6 @@ def get_reply(type, question):
             return '再见，有空再来找我玩~'
         else:
             return '哈哈哈哈'
-
     else:
         return '看不懂诶'
 
