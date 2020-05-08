@@ -13,4 +13,4 @@ WECHAT_TOKEN = 'gintoki'
 
 
 def reply_template(fr, to, time, reply):
-    return REPLY_STR % (fr, to, int(time.time()), reply)
+    return REPLY_STR % (fr, to, time, reply)
