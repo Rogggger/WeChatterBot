@@ -26,6 +26,7 @@ class SearchAlgorithm:
         """
         An exception to be raised when an adapter method has not been implemented.
         """
+
         def __init__(self, message='search'):
             super().__init__(f'Method "{message}" must be overridden in a subclass method.')
 

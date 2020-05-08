@@ -299,7 +299,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         for start_index in range(0, total_statements, page_size):
             for statement in statements.slice(start_index, start_index + page_size):
-                yield self.model_to_object(statement)
+                yield statement
 
         session.close()
 
@@ -379,7 +379,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         for start_index in range(0, total_statements, page_size):
             for statement in statements.slice(start_index, start_index + page_size):
-                yield self.statement_model_to_object(statement)
+                yield statement
 
         session.close()
 
@@ -410,7 +410,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         for start_index in range(0, total_statements, page_size):
             for statement in statements.slice(start_index, start_index + page_size):
-                yield self.statementrules_model_to_object(statement)
+                yield statement
 
         session.close()
 

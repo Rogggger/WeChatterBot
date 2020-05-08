@@ -43,6 +43,7 @@ class PosLemmaTagger(object):
             bigram_pairs = [
                 token.lemma_.lower() for token in document
             ]
+            tokens = [ele for ele in bigram_pairs]
         else:
             tokens = [
                 token for token in document if token.is_alpha and not token.is_stop
@@ -59,6 +60,6 @@ class PosLemmaTagger(object):
             #     ]
             #
             # return ' '.join(bigram_pairs)
-            return ' '.join(tokens)
+        return ' '.join(tokens)
 
 

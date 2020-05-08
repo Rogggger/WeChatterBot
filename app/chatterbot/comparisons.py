@@ -159,16 +159,9 @@ class JaccardSimilarity(Comparator):
         statements based on the Jaccard index.
         """
         # Make both strings lowercase
-        document_a = self.nlp(statement_a.text.lower())
-        document_b = self.nlp(statement_b.text.lower())
 
-        statement_a_lemmas = set([
-            token.lemma_ for token in document_a if not token.is_stop
-        ])
-        statement_b_lemmas = set([
-            token.lemma_ for token in document_b if not token.is_stop
-        ])
-
+        statement_a_lemmas = set([ele for ele in statement_a.search_text.split()])
+        statement_b_lemmas = set([ele for ele in statement_b.search_text.split()])
         # Calculate Jaccard similarity
         numerator = len(statement_a_lemmas.intersection(statement_b_lemmas))
         denominator = float(len(statement_a_lemmas.union(statement_b_lemmas)))
