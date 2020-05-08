@@ -50,12 +50,12 @@ def wechat():
 
     if request.method == 'POST':
         xml_rec = et.fromstring(request.get_data())
-        req = {k: xml_rec.find(k) for k in MSG_KEYS}
+        req = {k: xml_rec.find(k).text for k in MSG_KEYS}
 
         if req['MsgType'] is None:
             return error_jsonify(10000001)
         if req['MsgType'] == 'event':
-            req['Content'] = xml_rec.find('Event')
+            req['Content'] = xml_rec.find('Event').text
         if req['Content'] is None:
             return error_jsonify(10000001)
 
