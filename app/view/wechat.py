@@ -4,7 +4,7 @@ import xml.etree.cElementTree as et
 
 from flask import request, Blueprint
 
-from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, reply_template
+from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, reply_template
 from app.libs.http import error_jsonify
 from app.libs.chatbot import chatbot
 
@@ -56,6 +56,8 @@ def wechat():
             return error_jsonify(10000001)
         if req['MsgType'].text == 'event':
             req['Content'] = xml_rec.find('Event')
+        if req['MsgType'].text in OTHER_MSG_TYPE:
+            req['Content'] = xml_rec.find('MsgType')
         if req['Content'] is None:
             return error_jsonify(10000001)
 
