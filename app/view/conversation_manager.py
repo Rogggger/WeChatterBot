@@ -18,7 +18,7 @@ def _statement2dict(s):
         'in_response_to': s.in_response_to,
         'search_text': s.search_text,
         'search_in_response_to': s.search_in_response_to,
-        'tags': s.tags
+        'tags': s.get_tags()
     }
 
 
@@ -199,6 +199,7 @@ def query():
     dict_statements = []
     for s in statements:
         # print(s.text)
+        s = db.Session().merge(s)
         dict_statements.append(_statement2dict(s))
 
     # 调用数据接口
