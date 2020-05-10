@@ -7,8 +7,8 @@ class ConstAdapter(LogicAdapter):
         super().__init__(chatbot, **kwargs)
         from app.chatterbot.conversation import Statement
 
-        self.text = kwargs.get('const_response','看不懂唉')
-        self.confidence = kwargs.get('const_confidence',0.0)
+        self.text = kwargs.get('const_response', '看不懂唉')
+        self.confidence = kwargs.get('const_confidence', 0.0)
 
         self.response_statement = Statement(text=self.text)
 
