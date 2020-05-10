@@ -1,5 +1,5 @@
 from unittest import TestCase
-#from app.chatterbot_api.chatterbot.conversation import Statement
+from app.chatterbot_api.chatterbot.conversation import Statement
 from app.chatterbot_api.chatterbot.storage.sql_storage import SQLStorageAdapter
 
 

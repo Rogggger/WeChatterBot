@@ -1,6 +1,5 @@
 from app.chatterbot_api.chatterbot.storage import StorageAdapter
-from app.chatterbot_api.chatterbot.storage import StorageAdapterNew
-
+from app.chatterbot_api.chatterbot.storage.storage_adapter_new import StorageAdapterNew
 
 class SQLStorageAdapterNew(StorageAdapterNew):
     def __init__(self, **kwargs):
@@ -347,9 +346,11 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         total_statements = statements.count()
 
+        #print("tags=",Statement.tags)
         for start_index in range(0, total_statements, page_size):
             for statement in statements.slice(start_index, start_index + page_size):
-                yield self.statement_model_to_object(statement)
+                #yield self.statement_model_to_object(statement)
+                yield statement
 
         session.close()
 

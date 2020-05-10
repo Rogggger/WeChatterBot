@@ -20,6 +20,7 @@ test.create_text(id=1,
                  text="Hello")
 test.create_text(id=2,
                  text="Hello!")
+res=list(test.filter_text(id=2))
 test.create_text(text="How are you?")
 '''
 count rule and statement
@@ -33,9 +34,12 @@ print("rule count = ",rule_count)
 filter rule and statement
 '''
 res=list(test.filter_rules())
-print("len=",len(res))
-
 res = list(test.filter_text())
+res[0]=test.Session().merge(res[0])
+print("type = ",type(res[0]))
+print("tags=",res[0].get_tags())
+print(res[0].get_tags())
+
 print("res size=",len(res))
 if len(res) >0:
     print(res[0].id,res[0].text)
@@ -55,9 +59,13 @@ test.update_text(Statement(text="I am angry.",in_response_to="too young too simp
 res=list(test.filter_text(text="I am angry."))
 print(res[0].in_response_to)
 
+res=list(test.filter_text(id=1))
+print("response to=",res[0].in_response_to)
+print("ct=",res[0].created_at)
 test.update_text(Statement(text="I am angry.",in_response_to="sometimes naive!",id=1))
-res=list(test.filter_text(text="I am angry."))
-print(res[0].in_response_to)
+res=list(test.filter_text(id=1))
+print("response to=",res[0].in_response_to)
+print("ct=",res[0].created_at)
 
 test.update_rule(StatementRules(text="I am angry.",in_response_to="too young too simple!"))
 res=list(test.filter_rules(search_text="I am angry."))
