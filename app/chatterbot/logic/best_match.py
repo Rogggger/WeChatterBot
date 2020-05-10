@@ -22,6 +22,11 @@ class BestMatch(LogicAdapter):
 
         self.excluded_words = kwargs.get('excluded_words')
 
+    def can_process(self, statement):
+        if not statement.search_text:
+            return False
+        return True
+
     def process(self, input_statement, additional_response_selection_parameters=None):
         search_results = self.search_algorithm.search(input_statement)
 
