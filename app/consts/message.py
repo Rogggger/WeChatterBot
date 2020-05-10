@@ -1,5 +1,6 @@
 SIGNATURE_KEYS = ['signature', 'timestamp', 'nonce', 'echostr']
 MSG_KEYS = ['ToUserName', 'FromUserName', 'MsgType', 'Content']
+OTHER_MSG_TYPE = ['image', 'voice', 'video', 'shortvideo', 'location', 'link']
 
 REPLY_STR = '''<xml>
                 <ToUserName><![CDATA[%s]]></ToUserName>
