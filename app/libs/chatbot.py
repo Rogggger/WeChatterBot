@@ -8,11 +8,14 @@ chatbot = ChatBot(
     "My ChatterBot",
     logic_adapters=[
         "chatterbot.logic.BestMatch",
-        "chatterbot.logic.RulesResponseAdapter"
+        "chatterbot.logic.RulesResponseAdapter",
+        "chatterbot.logic.ConstAdapter"
     ],
     tagger_language=languages.CHI,
     statement_comparison_function=comparisons.JaccardSimilarity,
-    response_selection_method=response_selection.get_most_frequent_response
+    response_selection_method=response_selection.get_most_frequent_response,
+    const_response='没看懂唉',
+    const_confidence=0.1
 )
 trainer = ChatterBotCorpusTrainer(chatbot)
 trainer.train("chatterbot.corpus.chinese")
