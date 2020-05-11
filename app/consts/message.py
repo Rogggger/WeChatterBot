@@ -244,7 +244,7 @@ class WXBizMsgCrypt(object):
         # @param sPostData: 密文，对应POST请求的数据
         #  xml_content: 解密后的原文，当return返回0时有效
         # @return: 成功0，失败返回对应的错误码
-         # 验证安全签名
+        # 验证安全签名
         xmlParse = XMLParse()
         ret, encrypt = xmlParse.extract(sPostData)
         if ret != 0:
