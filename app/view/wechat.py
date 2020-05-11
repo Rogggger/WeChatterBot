@@ -4,11 +4,21 @@ import xml.etree.cElementTree as et
 
 from flask import request, Blueprint
 
-from app.consts.message import WECHAT_TOKEN, SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, reply_template
+from app.consts.message import WECHAT_TOKEN, WECHAT_APPID, WECHAT_AESKEY, SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, ENCRYPT_SIGNATURE_KEYS, reply_template
+from app.consts.message import WXBizMsgCrypt
+
 from app.libs.http import error_jsonify
 from app.libs.chatbot import chatbot
 
 bp_wechat = Blueprint('wx', __name__, url_prefix='/wx')
+
+
+def check_signature(TOKEN, timestamp, nonce, signature):  # 签名验证
+    lis = [TOKEN, timestamp, nonce]
+    lis.sort()
+    temp_str = "".join(lis).encode('utf-8')
+    sign = hashlib.sha1(temp_str).hexdigest()
+    return sign == signature
 
 
 def get_reply(type, question):
@@ -37,31 +47,55 @@ def wechat():
         if not all(k in req for k in check_keys):
             return error_jsonify(10000001)
 
-        lis = [WECHAT_TOKEN, req['timestamp'], req['nonce']]
-        lis.sort()
-        temp_str = "".join(lis).encode('utf-8')
-
-        sign = hashlib.sha1(temp_str).hexdigest()
-
-        if req['signature'] != sign:
-            return error_jsonify(10000002)
-        else:
+        if check_signature(WECHAT_TOKEN, req['timestamp'], req['nonce'], req['signature']):
             return req['echostr']
+        else:
+            return error_jsonify(10000002)
 
     if request.method == 'POST':
-        xml_rec = et.fromstring(request.get_data())
-        req = {k: xml_rec.find(k) for k in MSG_KEYS}
+        data = request.args
+        encrypt_type = data.get('encrypt_type')
+        if encrypt_type == 'aes':  # 加密模式
+            req = {k: data[k]
+                   for k in ENCRYPT_SIGNATURE_KEYS if data.get(k) is not None}
+            check_keys = ('signature', 'timestamp', 'nonce', 'msg_signature')
+            if not all(k in req for k in check_keys):
+                return error_jsonify(10000001)
 
-        if req['MsgType'] is None:
+            if not check_signature(WECHAT_TOKEN, req['timestamp'], req['nonce'], req['signature']):
+                return error_jsonify(10000002)
+
+            encrypt_content = request.get_data()
+            cryptor = WXBizMsgCrypt(
+                WECHAT_TOKEN, WECHAT_AESKEY, WECHAT_APPID)  # 实例化加解密器对象
+            ret, decrypt_xml = cryptor.DecryptMsg(
+                encrypt_content, req['msg_signature'], req['timestamp'], req['nonce'])  # 解密
+            if ret < 0:
+                return error_jsonify(10000031)  # 解密失败
+            xml_str = decrypt_xml
+        else:  # 非加密模式
+            xml_str = request.get_data()
+
+        xml_rec = et.fromstring(xml_str)
+        req_dic = {k: xml_rec.find(k) for k in MSG_KEYS}
+
+        if req_dic['MsgType'] is None:
             return error_jsonify(10000001)
-        if req['MsgType'].text == 'event':
-            req['Content'] = xml_rec.find('Event')
-        if req['MsgType'].text in OTHER_MSG_TYPE:
-            req['Content'] = xml_rec.find('MsgType')
-        if req['Content'] is None:
+        if req_dic['MsgType'].text == 'event':
+            req_dic['Content'] = xml_rec.find('Event')
+        if req_dic['MsgType'].text in OTHER_MSG_TYPE:
+            req_dic['Content'] = xml_rec.find('MsgType')
+        if req_dic['Content'] is None:
             return error_jsonify(10000001)
 
-        reply = get_reply(req['MsgType'].text,
-                          req['Content'].text)  # 根据消息类型获得回复
+        reply = get_reply(req_dic['MsgType'].text,
+                          req_dic['Content'].text)  # 根据消息类型获得回复
 
-        return reply_template(req['FromUserName'].text, req['ToUserName'].text, int(time.time()), reply)
+        reply_xml = reply_template(
+            req_dic['FromUserName'].text, req_dic['ToUserName'].text, int(time.time()), reply)
+        if encrypt_type == 'aes':
+            ret, encrypt_xml = cryptor.EncryptMsg(reply_xml, req['nonce'])
+            if ret < 0:
+                return error_jsonify(10000032)  # 加密失败
+            reply_xml = encrypt_xml
+        return reply_xml
