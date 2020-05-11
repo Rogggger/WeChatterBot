@@ -21,6 +21,7 @@ venv
 *.xml
 
 config.py
+keys.py
 .DS_Store
 __pycache__
 *.ipynb

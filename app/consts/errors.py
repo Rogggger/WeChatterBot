@@ -18,7 +18,8 @@ ERROR_MAP = {
     10000021: u"企业信息未填写",
     10000022: u"该信息已经被修改",
     # info error
-    10000031: u"",
+    10000031: u"消息加密失败",
+    10000032: u"消息解密失败",
     # data error
     10000041: u"Json格式错误"
     # functional error code:
