@@ -5,7 +5,7 @@ import xml.etree.cElementTree as et
 from flask import request, Blueprint
 
 from app.consts.message import WECHAT_TOKEN, WECHAT_APPID, WECHAT_AESKEY, SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, ENCRYPT_SIGNATURE_KEYS, reply_template
-from app.consts.message import WXBizMsgCrypt
+from app.libs.msgcryptor import WXBizMsgCrypt
 
 from app.libs.http import error_jsonify
 from app.libs.chatbot import chatbot
@@ -66,9 +66,9 @@ def wechat():
                 return error_jsonify(10000002)
 
             encrypt_content = request.get_data()
-            cryptor = WXBizMsgCrypt(
+            wx_cryptor = WXBizMsgCrypt(
                 WECHAT_TOKEN, WECHAT_AESKEY, WECHAT_APPID)  # 实例化加解密器对象
-            ret, decrypt_xml = cryptor.DecryptMsg(
+            ret, decrypt_xml = wx_cryptor.DecryptMsg(
                 encrypt_content, req['msg_signature'], req['timestamp'], req['nonce'])  # 解密
             if ret < 0:
                 return error_jsonify(10000031)  # 解密失败
@@ -94,7 +94,7 @@ def wechat():
         reply_xml = reply_template(
             req_dic['FromUserName'].text, req_dic['ToUserName'].text, int(time.time()), reply)
         if encrypt_type == 'aes':
-            ret, encrypt_xml = cryptor.EncryptMsg(reply_xml, req['nonce'])
+            ret, encrypt_xml = wx_cryptor.EncryptMsg(reply_xml, req['nonce'])
             if ret < 0:
                 return error_jsonify(10000032)  # 加密失败
             reply_xml = encrypt_xml
