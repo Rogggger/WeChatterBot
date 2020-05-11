@@ -24,7 +24,7 @@ REPLY_STR = '''<xml>
                 <Content><![CDATA[%s]]></Content>
                 </xml>'''
 
-WECHAT_TOKEN = 'g1ntoki'
+WECHAT_TOKEN = 'gintoki'
 WECHAT_APPID = 'wxaa4b38eec8c38711'
 WECHAT_AESKEY = '4RysXPyaEFOF84d8zmh6VSNgwWztkTBXK3p22B7Ey7D'
 
