@@ -11,10 +11,6 @@ REPLY_STR = '''<xml>
                 <Content><![CDATA[%s]]></Content>
                 </xml>'''
 
-WECHAT_TOKEN = 'gintoki'
-WECHAT_APPID = 'wxaa4b38eec8c38711'
-WECHAT_AESKEY = '4RysXPyaEFOF84d8zmh6VSNgwWztkTBXK3p22B7Ey7D'
-
 
 def reply_template(fr, to, time, reply):
     return REPLY_STR % (fr, to, time, reply)

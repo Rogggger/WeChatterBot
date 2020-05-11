@@ -4,7 +4,8 @@ import xml.etree.cElementTree as et
 
 from flask import request, Blueprint
 
-from app.consts.message import WECHAT_TOKEN, WECHAT_APPID, WECHAT_AESKEY, SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, ENCRYPT_SIGNATURE_KEYS, reply_template
+from app.consts.message import SIGNATURE_KEYS, MSG_KEYS, OTHER_MSG_TYPE, ENCRYPT_SIGNATURE_KEYS, reply_template
+from app.consts.keys import WECHAT_TOKEN, WECHAT_APPID, WECHAT_AESKEY
 from app.libs.msgcryptor import WXBizMsgCrypt
 
 from app.libs.http import error_jsonify
