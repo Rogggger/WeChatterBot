@@ -13,7 +13,7 @@ chatbot = ChatBot(
     ],
     tagger_language=languages.CHI,
     statement_comparison_function=comparisons.JaccardSimilarity,
-    response_selection_method=response_selection.get_most_frequent_response,
+    response_selection_method=response_selection.get_random_response,
     const_response='没看懂唉',
     const_confidence=0.1
 )
