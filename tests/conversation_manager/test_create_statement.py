@@ -9,6 +9,7 @@ class CreateStatementTestCase(TestCase):
     Unit tests for the Create Statement method.
     LJF: all tests clear 2020-5-12
     """
+
     def setUp(self):
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)

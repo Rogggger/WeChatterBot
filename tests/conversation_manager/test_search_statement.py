@@ -9,6 +9,7 @@ class SearchStatementTestCase(TestCase):
     Unit tests for the Admin Search Statement.
     LJF: all tests clear 2020-5-13
     """
+
     def setUp(self):
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)

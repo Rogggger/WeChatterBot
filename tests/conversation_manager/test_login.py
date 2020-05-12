@@ -7,6 +7,7 @@ class LoginTestCase(TestCase):
     Unit tests for the Admin Login.
     LJF: all tests clear 2020-5-12
     """
+
     def setUp(self):
         self.myheaders = {'Content-Type': 'application/json'}
         # super().setUp()
