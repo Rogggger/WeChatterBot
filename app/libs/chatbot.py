@@ -17,5 +17,6 @@ chatbot = ChatBot(
     const_response='没看懂唉',
     const_confidence=0.1
 )
-trainer = ChatterBotCorpusTrainer(chatbot)
-trainer.train("chatterbot.corpus.chinese")
+# only need to run once
+# trainer = ChatterBotCorpusTrainer(chatbot)
+# trainer.train("chatterbot.corpus.chinese")
