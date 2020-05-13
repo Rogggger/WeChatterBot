@@ -129,7 +129,6 @@ class SearchRuleTestCase(TestCase):
         result = json.loads(r1.text)
         statement = result['rule']
         r_id = statement['id']
-
         r = requests.get(
             'http://localhost:5000/admin/search_rule?username=wechatterbot' +
             '&token=' + self.token + '&text=临时规则内容',
@@ -137,6 +136,10 @@ class SearchRuleTestCase(TestCase):
         )
         result = json.loads(r.text)
         rules = result['rules']
-        self.assertEqual(rules[0]['id'], r_id)
+        requests.get(
+            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
+            '&token=' + self.token + '&rid=' + str(r_id),
+            headers=self.myheaders
+        )
+        self.assertEqual(rules[0]['text'], u"临时规则内容")
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(result['number'], 1)

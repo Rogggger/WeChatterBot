@@ -57,5 +57,4 @@ class LoginTestCase(TestCase):
             'http://localhost:5000/admin/login?username=wechatterbot&password=buaawechatterbot',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "密码不正确", "code": 10000013}')
         self.assertEqual(r.status_code, 200)

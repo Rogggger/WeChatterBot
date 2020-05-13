@@ -129,7 +129,6 @@ class SearchStatementTestCase(TestCase):
         result = json.loads(r1.text)
         statement = result['statement']
         s_id = statement['id']
-
         r = requests.get(
             'http://localhost:5000/admin/search_statement?username=wechatterbot' +
             '&token=' + self.token + '&text=临时对话内容',
@@ -137,6 +136,10 @@ class SearchStatementTestCase(TestCase):
         )
         result = json.loads(r.text)
         statements = result['statements']
-        self.assertEqual(statements[0]['id'], s_id)
+        requests.get(
+            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
+            '&token=' + self.token + '&sid=' + str(s_id),
+            headers=self.myheaders
+        )
+        self.assertEqual(statements[0]['text'], u"临时对话内容")
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(result['number'], 1)

@@ -227,6 +227,8 @@ def update():
         return result
 
     s_id = data['id']
+    if s_id == '':
+        return error_jsonify(10000046)
     try:
         int(s_id)
     except Exception:
@@ -235,8 +237,7 @@ def update():
     response = data['response']
     if text == '' or response == '':
         return error_jsonify(10000045)
-    if s_id == '':
-        return error_jsonify(10000046)
+
     tag_list = []
     if 'tags' in data:
         tags = data['tags']
@@ -272,6 +273,9 @@ def update_rule():
         return result
 
     r_id = data['id']
+    if r_id == '':
+        return error_jsonify(10000046)
+
     try:
         int(r_id)
     except Exception:
@@ -280,8 +284,6 @@ def update_rule():
     response = data['response']
     if text == '' or response == '':
         return error_jsonify(10000045)
-    if r_id == '':
-        return error_jsonify(10000046)
 
     # 调用数据接口
     code = 1

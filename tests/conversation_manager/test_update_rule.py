@@ -193,9 +193,9 @@ class UpdateRuleTestCase(TestCase):
             headers=self.myheaders
         )
         result = json.loads(r1.text)
-        statement = result['rule']
-        s_id = statement['id']
-        data['id'] = s_id
+        rule = result['rule']
+        r_id = rule['id']
+        data['id'] = r_id
         data['text'] = '新规则内容'
         r = requests.post(
             'http://localhost:5000/admin/update_rule',
@@ -204,6 +204,11 @@ class UpdateRuleTestCase(TestCase):
         )
         result = json.loads(r.text)
         statement = result['rule']
+        r = requests.get(
+            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
+            '&token=' + self.token + '&rid=' + str(r_id),
+            headers=self.myheaders
+        )
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
         self.assertEqual(statement['text'], "新规则内容")

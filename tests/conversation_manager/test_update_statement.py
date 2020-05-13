@@ -205,6 +205,11 @@ class UpdateStatementTestCase(TestCase):
         )
         result = json.loads(r.text)
         statement = result['statement']
+        requests.get(
+            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
+            '&token=' + self.token + '&sid=' + str(s_id),
+            headers=self.myheaders
+        )
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
         self.assertEqual(statement['text'], "新对话内容")
