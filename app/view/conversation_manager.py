@@ -6,9 +6,13 @@ from app.chatterbot.conversation import StatementRules
 from app.libs.chatbot import chatbot
 from app.libs.http import error_jsonify, jsonify
 import traceback
+import time
+import base64
+import hmac
 
 bp_manager = Blueprint('admin', __name__, url_prefix='/admin')
 db = chatbot.storage
+dictionary = {'wechatterbot': b'buaa'}
 
 
 def _statement2dict(s):
@@ -32,18 +36,82 @@ def _rule2dict(r):
     }
 
 
+def get_db():
+    return db
+
+
+def generate_token(key, expire_time=86400):
+    # expire_time:1天
+    ts_str = str(time.time() + expire_time)
+    ts_byte = ts_str.encode("utf-8")
+    sha1_ts = hmac.new(key, ts_byte, 'sha1').hexdigest()
+    token = ts_str+':'+sha1_ts
+    b64_token = base64.urlsafe_b64encode(token.encode("utf-8"))
+    return b64_token.decode("utf-8")
+
+
+def certify_token(username, token):
+    if username not in dictionary:
+        return False, error_jsonify(10000044, status_code=401)
+    key = dictionary[username]
+    token_str = base64.urlsafe_b64decode(token).decode('utf-8')
+    token_list = token_str.split(':')
+    if len(token_list) != 2:
+        return False, error_jsonify(10000042, status_code=401)
+    ts_str = token_list[0]
+    if float(ts_str) < time.time():
+        # token 过期
+        return False, error_jsonify(10000043, status_code=401)
+    known_sha1_ts = token_list[1]
+    sha1 = hmac.new(key, ts_str.encode('utf-8'), 'sha1')
+    calc_sha1_ts = sha1.hexdigest()
+    if calc_sha1_ts != known_sha1_ts:
+        # token 验证不成功
+        return False, error_jsonify(10000044, status_code=401)
+    # token certification success
+    data = {'result': 'success'}
+    return True, jsonify(data)
+
+
+@bp_manager.route('/certify', methods=['POST'])
+def check_user():
+    try:
+        data = json.loads(request.get_data(as_text=True))
+    except ValueError:
+        return error_jsonify(10000041)
+    except Exception:
+        traceback.print_exc()
+        return error_jsonify(10000002)
+    check_keys = ('username', 'token')
+    if not all(k in data for k in check_keys):
+        return error_jsonify(10000001)
+    username = data['username']
+    b, result = certify_token(
+        username,
+        data['token'].encode('utf-8')
+    )
+    if b:
+        return jsonify({'code': 1})
+    else:
+        return result
+
+
 @bp_manager.route('/login', methods=['GET'])
 def admin_login():
-    data = request.args
-    check_keys = ('username', 'password')
-    keys = ('username', 'password')
-    req = {k: data[k] for k in keys if data.get(k) is not None}
-    if not all(k in req for k in check_keys):
+    username = request.args.get("username")
+    password = request.args.get("password")
+    if password is None or password == '':
+        return error_jsonify(10000001)
+    if username is None or username == '':
         return error_jsonify(10000001)
 
-    data = {'username': req['username'], 'userId': 1}
-    if req['username'] == 'wechatterbot':
-        if req['password'] == 'buaawechatterbot':
+    if username == 'wechatterbot':
+        if password == 'buaawechatterbot':
+            data = {
+                'username': username,
+                'userId': 1,
+                'token': generate_token(dictionary[username])
+            }
             return jsonify(data)
         else:
             return error_jsonify(10000013)
@@ -53,7 +121,6 @@ def admin_login():
 
 @bp_manager.route('/create_statement', methods=['POST'])
 def create():
-    data = {}
     try:
         data = json.loads(request.get_data(as_text=True))
     except ValueError:
@@ -62,12 +129,20 @@ def create():
         traceback.print_exc()
         return error_jsonify(10000002)
 
-    check_keys = ('text', 'response')
+    check_keys = ('text', 'response', 'username', 'token')
     if not all(k in data for k in check_keys):
         return error_jsonify(10000001)
+    b, result = certify_token(
+        data['username'],
+        data['token'].encode('utf-8')
+    )
+    if not b:
+        return result
 
     s_text = data['text']
     s_response = data['response']
+    if s_text == '' or s_response == '':
+        return error_jsonify(10000045)
     tag_list = []
     if 'tags' in data:
         tags = data['tags']
@@ -92,7 +167,6 @@ def create():
 
 @bp_manager.route('/create_rule', methods=['POST'])
 def create_rule():
-    data = {}
     try:
         data = json.loads(request.get_data(as_text=True))
     except ValueError:
@@ -101,12 +175,20 @@ def create_rule():
         traceback.print_exc()
         return error_jsonify(10000002)
 
-    check_keys = ('text', 'response')
+    check_keys = ('text', 'response', 'username', 'token')
     if not all(k in data for k in check_keys):
         return error_jsonify(10000001)
+    b, result = certify_token(
+        data['username'],
+        data['token'].encode('utf-8')
+    )
+    if not b:
+        return result
 
     r_text = data['text']
     r_response = data['response']
+    if r_text == '' or r_response == '':
+        return error_jsonify(10000045)
     # 调用数据接口
     code = 0
     new_rule = db.create_rule(
@@ -126,7 +208,6 @@ def create_rule():
 
 @bp_manager.route('/update_statement', methods=['POST'])
 def update():
-    data = {}
     try:
         data = json.loads(request.get_data(as_text=True))
     except ValueError:
@@ -135,12 +216,27 @@ def update():
         traceback.print_exc()
         return error_jsonify(10000002)
 
-    check_keys = ('id', 'text', 'response')
+    check_keys = ('id', 'text', 'response', 'username', 'token')
     if not all(k in data for k in check_keys):
         return error_jsonify(10000001)
+    b, result = certify_token(
+        data['username'],
+        data['token'].encode('utf-8')
+    )
+    if not b:
+        return result
+
     s_id = data['id']
+    try:
+        int(s_id)
+    except Exception:
+        return error_jsonify(10000001)
     text = data['text']
     response = data['response']
+    if text == '' or response == '':
+        return error_jsonify(10000045)
+    if s_id == '':
+        return error_jsonify(10000046)
     tag_list = []
     if 'tags' in data:
         tags = data['tags']
@@ -157,7 +253,6 @@ def update():
 
 @bp_manager.route('/update_rule', methods=['POST'])
 def update_rule():
-    data = {}
     try:
         data = json.loads(request.get_data(as_text=True))
     except ValueError:
@@ -166,12 +261,27 @@ def update_rule():
         traceback.print_exc()
         return error_jsonify(10000002)
 
-    check_keys = ('text', 'response', 'id')
+    check_keys = ('id', 'text', 'response', 'username', 'token')
     if not all(k in data for k in check_keys):
         return error_jsonify(10000001)
+    b, result = certify_token(
+        data['username'],
+        data['token'].encode('utf-8')
+    )
+    if not b:
+        return result
+
     r_id = data['id']
+    try:
+        int(r_id)
+    except Exception:
+        return error_jsonify(10000001)
     text = data['text']
     response = data['response']
+    if text == '' or response == '':
+        return error_jsonify(10000045)
+    if r_id == '':
+        return error_jsonify(10000046)
 
     # 调用数据接口
     code = 1
@@ -186,13 +296,30 @@ def update_rule():
 def query():
     s_text = request.args.get("text")
     s_id = request.args.get("id")
+
+    token = request.args.get("token")
+    username = request.args.get("username")
+    if token is None or token == '':
+        return error_jsonify(10000001, status_code=400)
+    if username is None or username == '':
+        return error_jsonify(10000001, status_code=400)
+
     # 调用数据接口
     if s_id is not None and s_id != '':
+        try:
+            int(s_id)
+        except Exception:
+            return error_jsonify(10000001)
         statements = list(db.filter_text(id=s_id))
     elif s_text is not None and s_text != '':
         statements = list(db.filter_text(text=s_text))
     else:
         return error_jsonify(10000001)
+
+    b, result = certify_token(username, token.encode('utf-8'))
+    if not b:
+        return result
+
     number = len(statements)
     code = 1
 
@@ -212,13 +339,28 @@ def query():
 def query_rule():
     r_text = request.args.get("text")
     r_id = request.args.get("id")
+
+    token = request.args.get("token")
+    username = request.args.get("username")
+    if token is None or token == '':
+        return error_jsonify(10000001, status_code=400)
+    if username is None or username == '':
+        return error_jsonify(10000001, status_code=400)
     # 调用数据接口
+
     if r_id != ''and r_id is not None:
+        try:
+            int(r_id)
+        except Exception:
+            return error_jsonify(10000001)
         rules = list(db.filter_rules(id=r_id))
     elif r_text != ''and r_text is not None:
         rules = list(db.filter_rules(text=r_text))
     else:
         return error_jsonify(10000001)
+    b, result = certify_token(username, token.encode('utf-8'))
+    if not b:
+        return result
     number = len(rules)
     code = 1
 
@@ -234,7 +376,20 @@ def query_rule():
 @bp_manager.route('/delete_statement', methods=['GET'])
 def delete_statement():
     statement_id = request.args.get("sid")
+    token = request.args.get("token")
+    username = request.args.get("username")
+    if token is None or token == '':
+        return error_jsonify(10000001, status_code=400)
+    if username is None or username == '':
+        return error_jsonify(10000001, status_code=400)
     if statement_id == '' or statement_id is None:
+        return error_jsonify(10000001)
+    b, result = certify_token(username, token.encode('utf-8'))
+    if not b:
+        return result
+    try:
+        int(statement_id)
+    except Exception:
         return error_jsonify(10000001)
     # 调用数据接口
     code = 1
@@ -247,8 +402,21 @@ def delete_statement():
 
 @bp_manager.route('/delete_rule', methods=['GET'])
 def delete_rule():
+    token = request.args.get("token")
+    username = request.args.get("username")
+    if token is None or token == '':
+        return error_jsonify(10000001, status_code=400)
+    if username is None or username == '':
+        return error_jsonify(10000001, status_code=400)
+    b, result = certify_token(username, token.encode('utf-8'))
+    if not b:
+        return result
     rule_id = request.args.get("rid")
     if rule_id == '' or rule_id is None:
+        return error_jsonify(10000001)
+    try:
+        int(rule_id)
+    except Exception:
         return error_jsonify(10000001)
     # 调用数据接口
     code = 1

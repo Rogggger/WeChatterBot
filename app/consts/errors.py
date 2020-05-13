@@ -21,7 +21,12 @@ ERROR_MAP = {
     10000031: u"消息加密失败",
     10000032: u"消息解密失败",
     # data error
-    10000041: u"Json格式错误"
+    10000041: u"Json格式错误",
+    10000042: u"Token格式错误",
+    10000043: u"Token过期",
+    10000044: u"Token验证失败",
+    10000045: u"text或response为空",
+    10000046: u"id为空"
     # functional error code:
 
 }
