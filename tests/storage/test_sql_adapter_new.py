@@ -3,7 +3,6 @@ from app.chatterbot.conversation import Statement
 from app.chatterbot.conversation import StatementRules
 from app.chatterbot.storage.sql_storage_new import SQLStorageAdapterNew
 from app.chatterbot import languages
-#import unittest
 class SQLStorageAdapterNewTestCase(TestCase):
     """
     SQL Storage Adapter New测试类
