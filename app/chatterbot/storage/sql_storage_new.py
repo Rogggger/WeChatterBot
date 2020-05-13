@@ -155,6 +155,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         session.delete(record)
 
         self._session_finish(session)
+
     def remove_text_by_text(self, statement_text):
         """
         删除符合statements的对话
