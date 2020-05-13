@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
 import requests
-from app.view.wechat import *
+import xml.etree.cElementTree as et
 
 
 class CheckSignatureTestCase (TestCase):
