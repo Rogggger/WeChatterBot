@@ -20,8 +20,6 @@ class SQLStorageAdapterTestCase(TestCase):
 
 
 class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
-    def __init__(self):
-        self.adapter = SQLStorageAdapter(database_uri='sqlite:///db.sqlite3')
 
     def test_set_database_uri_none(self):
         adapter = SQLStorageAdapter(database_uri=None)
@@ -467,5 +465,3 @@ class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(statements[0].get_tags()), 1)
         self.assertEqual(statements[0].get_tags(), ['ab'])
 
-test=SQLStorageAdapterTests()
-print("statement count=",test.adapter.count())
