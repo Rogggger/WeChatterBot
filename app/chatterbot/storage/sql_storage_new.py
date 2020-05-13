@@ -62,7 +62,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         session.close()
         return statement
-        
+
     def get_statement_object(self):
         from app.chatterbot.conversation import Statement
 
@@ -73,6 +73,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         )
 
         return Statement
+
     def get_tag_model(self):
         """
         Return the conversation model.
@@ -155,8 +156,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         self._session_finish(session)
 
-
-    def remove_text_by_text(self,statement_text):
+    def remove_text_by_text(self, statement_text):
         """
         删除符合statements的对话
         """
@@ -169,7 +169,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         self._session_finish(session)
 
-    def remove_text_by_id(self,statement_id):
+    def remove_text_by_id(self, statement_id):
         """
         删除符合statements的对话
         """
@@ -303,7 +303,6 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         session.close()
 
-
     def filter_text(self, **kwargs):
         """
         Returns a list of objects from the database.
@@ -377,6 +376,7 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         total_statements = statements.count()
 
+        # print("tags=",Statement.tags)
         for start_index in range(0, total_statements, page_size):
             for statement in statements.slice(start_index, start_index + page_size):
                 yield statement
@@ -427,12 +427,14 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         tags = set(kwargs.pop('tags', []))
 
         if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
+            kwargs['search_text'] = self.tagger.get_text_index_string(
+                kwargs['text'])
 
         if 'search_in_response_to' not in kwargs:
             in_response_to = kwargs.get('in_response_to')
             if in_response_to:
-                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(in_response_to)
+                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(
+                    in_response_to)
 
         statement = Statement(**kwargs)
 
@@ -477,10 +479,12 @@ class SQLStorageAdapterNew(StorageAdapterNew):
             statement_model_object = Statement(**statement_data)
 
             if not statement.search_text:
-                statement_model_object.search_text = self.tagger.get_text_index_string(statement.text)
+                statement_model_object.search_text = self.tagger.get_text_index_string(
+                    statement.text)
 
             if not statement.search_in_response_to and statement.in_response_to:
-                statement_model_object.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+                statement_model_object.search_in_response_to = self.tagger.get_text_index_string(
+                    statement.in_response_to)
 
             new_tags = set(tag_data) - set(create_tags.keys())
 
@@ -540,10 +544,12 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
             record.created_at = statement.created_at
 
-            record.search_text = self.tagger.get_text_index_string(statement.text)
+            record.search_text = self.tagger.get_text_index_string(
+                statement.text)
 
             if statement.in_response_to:
-                record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+                record.search_in_response_to = self.tagger.get_text_index_string(
+                    statement.in_response_to)
 
             for tag_name in statement.get_tags():
                 tag = session.query(Tag).filter_by(name=tag_name).first()
@@ -557,7 +563,6 @@ class SQLStorageAdapterNew(StorageAdapterNew):
             session.add(record)
 
             self._session_finish(session)
-
 
     def create_text(self, **kwargs):
         """
@@ -613,13 +618,13 @@ class SQLStorageAdapterNew(StorageAdapterNew):
 
         session = self.Session()
         if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
+            kwargs['search_text'] = self.tagger.get_text_index_string(
+                kwargs['text'])
 
         if 'search_in_response_to' not in kwargs:
             kwargs['search_in_response_to'] = self.tagger.get_text_index_string(
                 kwargs['in_response_to'])
         statement = Statement(**kwargs)
-
 
         session.add(statement)
 
@@ -767,7 +772,6 @@ class SQLStorageAdapterNew(StorageAdapterNew):
         """
         Statement = self.get_model('statementrules')
 
-
         if statement is not None:
             session = self.Session()
             record = None
@@ -780,17 +784,19 @@ class SQLStorageAdapterNew(StorageAdapterNew):
                 if statement.search_text is not None:
                     record.search_text = statement.search_text
                 else:
-                    record.search_text = self.tagger.get_text_index_string(statement.text)
+                    record.search_text = self.tagger.get_text_index_string(
+                        statement.text)
                 if statement.search_in_response_to is not None:
                     record.search_in_response_to = statement.search_in_response_to
                 elif statement.in_response_to is not None:
-                    record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+                    record.search_in_response_to = self.tagger.get_text_index_string(
+                        statement.in_response_to)
             else:
                 if statement.text is not None:
                     record = session.query(Statement).filter(
                         Statement.text == statement.text,
                     ).first()
-            #if statement.search_in_response_to is not None:
+            # if statement.search_in_response_to is not None:
             #    record.search_in_response_to=statement.search_in_response_to
             if not record:
                 record = Statement(
@@ -801,11 +807,13 @@ class SQLStorageAdapterNew(StorageAdapterNew):
             if statement.search_text is not None:
                 record.search_text = statement.search_text
             else:
-                record.search_text=self.tagger.get_text_index_string(statement.text)
+                record.search_text = self.tagger.get_text_index_string(
+                    statement.text)
             if statement.search_in_response_to is not None:
                 record.search_in_response_to = statement.search_in_response_to
             elif statement.in_response_to is not None:
-                record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+                record.search_in_response_to = self.tagger.get_text_index_string(
+                    statement.in_response_to)
 
             session.add(record)
 
