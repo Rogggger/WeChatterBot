@@ -1,5 +1,5 @@
 from unittest import TestCase
-import requests
+from app import create_app
 from app.view.conversation_manager import generate_token
 import json
 
@@ -11,18 +11,19 @@ class UpdateRuleTestCase(TestCase):
     """
 
     def setUp(self):
+        self.app = create_app().test_client()
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)
         # super().setUp()
 
     def test_no_attribute(self):
         data = {}
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -33,12 +34,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -49,12 +50,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -65,12 +66,12 @@ class UpdateRuleTestCase(TestCase):
             'token': self.token,
             'text': '对话内容'
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -81,12 +82,12 @@ class UpdateRuleTestCase(TestCase):
             'token': self.token,
             'text': '对话内容'
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -98,12 +99,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            data,
+        r = self.app.post(
+            'admin/update_rule',
+            data=data,
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000041)
         self.assertEqual(r.status_code, 400)
 
@@ -115,12 +116,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterwhat',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
@@ -132,12 +133,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
@@ -149,12 +150,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
@@ -166,12 +167,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000046)
         self.assertEqual(r.status_code, 400)
 
@@ -183,12 +184,12 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
 
     def test_successful_update(self):
@@ -198,28 +199,23 @@ class UpdateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r1 = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r1.text)
+        result = json.loads(r.data.decode('utf-8'))
         rule = result['rule']
         r_id = rule['id']
         data['id'] = r_id
         data['text'] = '新规则内容'
-        r = requests.post(
-            'http://localhost:5000/admin/update_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
-        statement = result['rule']
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
-            '&token=' + self.token + '&rid=' + str(r_id),
-            headers=self.myheaders
-        )
+        result = json.loads(r.data.decode('utf-8'))
+        rule = result['rule']
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
-        self.assertEqual(statement['text'], "新规则内容")
+        self.assertEqual(rule['text'], "新规则内容")
