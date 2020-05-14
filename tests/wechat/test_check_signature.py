@@ -31,7 +31,6 @@ class CheckSignatureTestCase(TestCase):
                              '16120ec1b8dbb870f510d87ce6bc2463eae6ca2b',
                              'echostr': 'connected'
                          })
-
         self.assertEqual(r.status_code, 400)
         ret = r.data.decode('utf-8')
         self.assertEqual(ret, '{"error": "服务器内部错误", "code": 10000002}')
@@ -50,5 +49,4 @@ class CheckSignatureTestCase(TestCase):
 
 
 if __name__ == '__main__':
-
     unittest.main()

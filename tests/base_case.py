@@ -1,13 +1,16 @@
 from unittest import TestCase
-from app.chatterbot_api.chatterbot import ChatBot
+from app.chatterbot import ChatBot, languages
 from typing import Sized
 
 Keyword_args = {
     # Run the test database in-memory
     'database_uri': None,
     # Don't execute initialization processes such as downloading required data
-    'initialize': False
+    'initialize': False,
+    'tagger_languages': languages.CHI
 }
+
+
 class ChatBotTestCase(TestCase):
     """
     base test case for chatbot
