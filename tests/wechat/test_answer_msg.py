@@ -2,9 +2,6 @@ import unittest
 from unittest import TestCase
 import requests
 import xml.etree.cElementTree as et
-
-# import sys
-# sys.path.append("..")
 from app import create_app
 from app.libs.msgcryptor import WXBizMsgCrypt
 

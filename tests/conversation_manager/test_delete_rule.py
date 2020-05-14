@@ -1,5 +1,5 @@
 from unittest import TestCase
-import requests
+from app import create_app
 from app.view.conversation_manager import generate_token
 import json
 
@@ -11,91 +11,109 @@ class DeleteRuleTestCase(TestCase):
     """
 
     def setUp(self):
+        self.app = create_app().test_client()
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)
         # super().setUp()
 
     def test_no_attribute(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule',
+        r = self.app.get(
+            'admin/delete_rule',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?token=111&rid=1',
+        r = self.app.get(
+            'admin/delete_rule?token=111&rid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_token(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot&rid=1',
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot&rid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_username(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterwhat' +
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterwhat' +
             '&token='+self.token+'&rid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_wrong_token(self):
         wrong_token = generate_token(b'what', 3600)
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
-            '&rid=1' + '&token=' + wrong_token,
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot' +
+            '&token=' + wrong_token + '&rid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_no_id(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot' +
             '&token=' + self.token,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000046)
 
     def test_empty_id(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot' +
             '&token=' + self.token + '&rid=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000046)
+        self.assertEqual(r.status_code, 400)
+
+    def test_id_not_a_number(self):
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot' +
+            '&token=' + self.token + '&rid=string',
+            headers=self.myheaders
+        )
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_successful_delete(self):
         data = {
-            'response': '临时回复规则',
-            'text': '临时规则内容',
+            'response': '回复规则',
+            'text': '规则内容',
             'username': 'wechatterbot',
             'token': self.token
         }
-        r1 = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r1 = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r1.text)
+        result = json.loads(r1.data.decode('utf-8'))
         rule = result['rule']
         r_id = rule['id']
 
-        r = requests.get(
-            'http://localhost:5000/admin/delete_rule?username=wechatterbot' +
-            '&token=' + self.token + '&rid='+str(r_id),
+        r = self.app.get(
+            'admin/delete_rule?username=wechatterbot' +
+            '&token=' + self.token + '&rid=' + str(r_id),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
