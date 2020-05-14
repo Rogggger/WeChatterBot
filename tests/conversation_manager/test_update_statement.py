@@ -1,5 +1,5 @@
 from unittest import TestCase
-import requests
+from app import create_app
 from app.view.conversation_manager import generate_token
 import json
 
@@ -11,18 +11,19 @@ class UpdateStatementTestCase(TestCase):
     """
 
     def setUp(self):
+        self.app = create_app().test_client()
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)
         # super().setUp()
 
     def test_no_attribute(self):
         data = {}
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -33,12 +34,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -49,12 +50,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -65,12 +66,12 @@ class UpdateStatementTestCase(TestCase):
             'token': self.token,
             'text': '对话内容'
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -81,12 +82,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -98,12 +99,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            data,
+        r = self.app.post(
+            'admin/update_statement',
+            data=data,
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000041)
         self.assertEqual(r.status_code, 400)
 
@@ -115,12 +116,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterwhat',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
@@ -132,12 +133,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
@@ -149,12 +150,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
@@ -166,12 +167,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000046)
         self.assertEqual(r.status_code, 400)
 
@@ -183,12 +184,12 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
@@ -199,28 +200,23 @@ class UpdateStatementTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r1 = requests.post(
-            'http://localhost:5000/admin/create_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r1.text)
+        result = json.loads(r.data.decode('utf-8'))
         statement = result['statement']
         s_id = statement['id']
         data['id'] = s_id
         data['text'] = '新对话内容'
-        r = requests.post(
-            'http://localhost:5000/admin/update_statement',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/update_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         statement = result['statement']
-        requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
-            '&token=' + self.token + '&sid=' + str(s_id),
-            headers=self.myheaders
-        )
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
         self.assertEqual(statement['text'], "新对话内容")
