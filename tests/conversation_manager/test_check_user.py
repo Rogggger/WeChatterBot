@@ -22,7 +22,8 @@ class CheckUserTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
@@ -34,7 +35,8 @@ class CheckUserTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_token(self):
@@ -46,7 +48,8 @@ class CheckUserTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_username(self):
@@ -59,7 +62,8 @@ class CheckUserTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_wrong_json(self):
@@ -72,7 +76,8 @@ class CheckUserTestCase(TestCase):
             data,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Json格式错误", "code": 10000041}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000041)
         self.assertEqual(r.status_code, 400)
 
     def test_check_fail(self):
@@ -86,7 +91,8 @@ class CheckUserTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_check_success(self):
