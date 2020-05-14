@@ -3,19 +3,14 @@ from unittest import TestCase
 import requests
 import xml.etree.cElementTree as et
 
-# import sys
-# sys.path.append("..")
 from app import create_app
 from app.libs.msgcryptor import WXBizMsgCrypt
 
 
 class AnswerMsgTestCase(TestCase):
     def setUp(self):
-        app = create_app()
-        self.app = app
-        app.config['TESTING'] = True
-
-        self.url = 'http://localhost:5000/wx/'
+        self.app = create_app().test_client()
+        self.pre = '/wx/'
         self.headers = {'Content-Type': 'text/xml'}
 
     def test_answer_text_msg(self):
@@ -27,7 +22,7 @@ class AnswerMsgTestCase(TestCase):
                 <Content><![CDATA[???]]></Content>
                 <MsgId>1234567890123456</MsgId>
                 </xml>'''
-        r = requests.post(url=self.url, data=datas, headers=self.headers)
+        r = self.app.post(self.pre, data=datas, headers=self.headers)
         self.assertEqual(r.status_code, 200)
 
     def test_answer_other_msg(self):
@@ -84,8 +79,9 @@ class AnswerMsgTestCase(TestCase):
         datas = [image_data, shortv_data, video_data, location_data, link_data]
 
         for d in datas:
-            r = requests.post(url=self.url, data=d, headers=self.headers)
-            xml_rec = et.fromstring(r.text)
+            r = self.app.post(self.pre, data=d, headers=self.headers)
+            ret = r.data.decode('utf-8')
+            xml_rec = et.fromstring(ret)
             self.assertEqual(r.status_code, 200)
             self.assertEqual(xml_rec.find('Content').text, '看不懂诶')
 
@@ -115,24 +111,25 @@ class AnswerMsgTestCase(TestCase):
         <MsgId>1234567890123456</MsgId>
         </xml>'''
 
-        r = requests.post(url=self.url,
-                          data=sub_event_data,
-                          headers=self.headers)
-        xml_rec = et.fromstring(r.text)
+        r = self.app.post(self.pre, data=sub_event_data, headers=self.headers)
+        ret = r.data.decode('utf-8')
+        xml_rec = et.fromstring(ret)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(xml_rec.find('Content').text, '你好哇，我是WeChatterBot!')
 
-        r = requests.post(url=self.url,
+        r = self.app.post(self.pre,
                           data=unsub_event_data,
                           headers=self.headers)
-        xml_rec = et.fromstring(r.text)
+        ret = r.data.decode('utf-8')
+        xml_rec = et.fromstring(ret)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(xml_rec.find('Content').text, '再见，有空再来找我玩~')
 
-        r = requests.post(url=self.url,
+        r = self.app.post(self.pre,
                           data=other_event_data,
                           headers=self.headers)
-        xml_rec = et.fromstring(r.text)
+        ret = r.data.decode('utf-8')
+        xml_rec = et.fromstring(ret)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(xml_rec.find('Content').text, '哈哈哈哈')
 
@@ -147,8 +144,9 @@ class AnswerMsgTestCase(TestCase):
         <MsgId>1234567890123456</MsgId>
         </xml>'''
 
-        r = requests.post(url=self.url, data=voice_data, headers=self.headers)
-        xml_rec = et.fromstring(r.text)
+        r = self.app.post(self.pre, data=voice_data, headers=self.headers)
+        ret = r.data.decode('utf-8')
+        xml_rec = et.fromstring(ret)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(xml_rec.find('Content').text, '风太大听不清还是用文字跟我聊天吧>.<')
 
@@ -170,9 +168,10 @@ class AnswerMsgTestCase(TestCase):
                 </xml>'''
         datas = [data_lack_type, data_lack_content]
         for d in datas:
-            r = requests.post(url=self.url, data=d, headers=self.headers)
+            r = self.app.post(self.pre, data=d, headers=self.headers)
             self.assertEqual(r.status_code, 400)
-            self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+            ret = r.data.decode('utf-8')
+            self.assertEqual(ret, '{"error": "参数不正确", "code": 10000001}')
 
         # 密文模式
         param = {
@@ -181,12 +180,13 @@ class AnswerMsgTestCase(TestCase):
             'nonce': 'nonce',
             'encrypt_type': 'aes'
         }
-        r = requests.post(url=self.url,
-                          params=param,
+        r = self.app.post(self.pre,
+                          query_string=param,
                           data=data_lack_type,
                           headers=self.headers)
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        ret = r.data.decode('utf-8')
+        self.assertEqual(ret, '{"error": "参数不正确", "code": 10000001}')
 
     def test_crypt_msg(self):
 
@@ -209,12 +209,13 @@ class AnswerMsgTestCase(TestCase):
         }
 
         # 解密失败
-        r = requests.post(url=self.url,
-                          params=invalid_param,
+        r = self.app.post(self.pre,
+                          query_string=invalid_param,
                           data=data,
                           headers=self.headers)
         self.assertEqual(r.status_code, 400)
-        self.assertEqual(r.text, '{"error": "消息加密失败", "code": 10000031}')
+        ret = r.data.decode('utf-8')
+        self.assertEqual(ret, '{"error": "消息加密失败", "code": 10000031}')
 
     def test_cryptor(self):
         encodingAESKey = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG"
