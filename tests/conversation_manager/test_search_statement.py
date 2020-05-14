@@ -20,7 +20,8 @@ class SearchStatementTestCase(TestCase):
             'http://localhost:5000/admin/search_statement',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
@@ -28,7 +29,8 @@ class SearchStatementTestCase(TestCase):
             'http://localhost:5000/admin/search_statement?token=111&id=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_token(self):
@@ -36,7 +38,8 @@ class SearchStatementTestCase(TestCase):
             'http://localhost:5000/admin/search_statement?username=wechatterbot&id=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_username(self):
@@ -45,7 +48,8 @@ class SearchStatementTestCase(TestCase):
             '&token='+self.token+'&id=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_wrong_token(self):
@@ -55,7 +59,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + wrong_token + '&id=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_empty_id_and_empty_text(self):
@@ -64,7 +69,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + self.token + '&id=&text=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_empty_id_and_no_text(self):
@@ -73,7 +79,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + self.token + '&id=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_id_and_empty_text(self):
@@ -82,7 +89,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + self.token + '&text=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_id_and_no_text(self):
@@ -91,7 +99,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + self.token,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_id_not_a_number(self):
@@ -100,7 +109,8 @@ class SearchStatementTestCase(TestCase):
             '&token=' + self.token+'&id=string',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
 
     def test_successful_search_with_id(self):
         r = requests.get(

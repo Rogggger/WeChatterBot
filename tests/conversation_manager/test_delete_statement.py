@@ -20,7 +20,8 @@ class DeleteStatementTestCase(TestCase):
             'http://localhost:5000/admin/delete_statement',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
@@ -28,7 +29,8 @@ class DeleteStatementTestCase(TestCase):
             'http://localhost:5000/admin/delete_statement?token=111&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_token(self):
@@ -36,7 +38,8 @@ class DeleteStatementTestCase(TestCase):
             'http://localhost:5000/admin/delete_statement?username=wechatterbot&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_username(self):
@@ -45,7 +48,8 @@ class DeleteStatementTestCase(TestCase):
             '&token='+self.token+'&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_wrong_token(self):
@@ -55,7 +59,8 @@ class DeleteStatementTestCase(TestCase):
             '&sid=1' + '&token=' + wrong_token,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_no_id(self):
@@ -64,7 +69,8 @@ class DeleteStatementTestCase(TestCase):
             '&token=' + self.token,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
 
     def test_empty_id(self):
         r = requests.get(
@@ -72,7 +78,8 @@ class DeleteStatementTestCase(TestCase):
             '&token=' + self.token + '&sid=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_successful_delete(self):
