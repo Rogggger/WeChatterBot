@@ -22,7 +22,8 @@ class CreateRuleTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_text(self):
@@ -36,7 +37,8 @@ class CreateRuleTestCase(TestCase):
             json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.text)
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_response(self):
