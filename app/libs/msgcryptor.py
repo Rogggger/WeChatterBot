@@ -23,7 +23,6 @@ def throw_exception(message, exception_class=FormatException):
 
 class SHA1:
     """计算公众平台的消息签名接口"""
-
     def getSHA1(self, token, timestamp, nonce, encrypt):
         """用SHA1算法生成安全签名
         @param token:  票据
@@ -116,7 +115,6 @@ class PKCS7Encoder():
 
 class Prpcrypt(object):
     """提供接收和推送给公众平台消息的加解密接口"""
-
     def __init__(self, key):
         # self.key = base64.b64decode(key+"=")
         self.key = key
@@ -129,8 +127,9 @@ class Prpcrypt(object):
         @return: 加密得到的字符串
         """
         # 16位随机字符串添加到明文开头
-        bytes = self.get_random_str().encode() + struct.pack("I",
-                                                             socket.htonl(len(text.encode()))) + text.encode() + appid.encode()
+        bytes = self.get_random_str().encode() + struct.pack(
+            "I", socket.htonl(len(
+                text.encode()))) + text.encode() + appid.encode()
         # 使用自定义的填充方式对明文进行补位填充
         pkcs7 = PKCS7Encoder()
         bytes = pkcs7.encode(bytes)
@@ -138,7 +137,8 @@ class Prpcrypt(object):
         try:
             ciphertext = cryptor.encrypt(bytes)
             # 使用BASE64对加密后的字符串进行编码
-            return ierror.WXBizMsgCrypt_OK, base64.b64encode(ciphertext).decode()
+            return ierror.WXBizMsgCrypt_OK, base64.b64encode(
+                ciphertext).decode()
         except Exception as e:
             return ierror.WXBizMsgCrypt_EncryptAES_Error, None
 
@@ -150,20 +150,19 @@ class Prpcrypt(object):
         try:
             cryptor = AES.new(self.key, self.mode, self.key[:16])
             # 使用BASE64对密文进行解码，然后AES-CBC解密
-            plain_text = cryptor.decrypt(base64.b64decode(text)).decode()
+            plain_text = cryptor.decrypt(base64.b64decode(text))
         except Exception as e:
             return ierror.WXBizMsgCrypt_DecryptAES_Error, None
         try:
-            pad = ord(plain_text[-1])
+            pad = plain_text[-1]
             # 去掉补位字符串
             # pkcs7 = PKCS7Encoder()
             # plain_text = pkcs7.encode(plain_text)
             # 去除16位随机字符串
             content = plain_text[16:-pad]
-            xml_len = socket.ntohl(struct.unpack(
-                "I", content.encode()[: 4])[0])
-            xml_content = content.encode()[4: xml_len+4].decode()
-            from_appid = content.encode()[xml_len+4:].decode()
+            xml_len = socket.ntohl(struct.unpack("I", content[:4])[0])
+            xml_content = content[4:xml_len + 4]
+            from_appid = content[xml_len + 4:].decode()
         except Exception as e:
             return ierror.WXBizMsgCrypt_IllegalBuffer, None
         if from_appid != appid:
@@ -186,11 +185,11 @@ class WXBizMsgCrypt(object):
     # @param sAppId: 企业号的AppId
     def __init__(self, sToken, sEncodingAESKey, sAppId):
         try:
-            self.key = base64.b64decode((sEncodingAESKey+"="))
+            self.key = base64.b64decode((sEncodingAESKey + "="))
             assert len(self.key) == 32
         except ValueError:
-            throw_exception(
-                "[error]: EncodingAESKey unvalid !", FormatException)
+            throw_exception("[error]: EncodingAESKey unvalid !",
+                            FormatException)
         self.token = sToken
         self.appid = sAppId
 
