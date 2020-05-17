@@ -15,7 +15,7 @@ WECHAT_APPID = 'xxxxx'
 WECHAT_AESKEY = 'xxxxx'
 ~~~
 缺少微信令牌的后端无法与真正的微信公众号相连，如果你有兴趣，欢迎搭建自己的测试公众号。
-
+此外，还需额外安装Crypto模块，具体安装方法请参考[这里](https://blog.csdn.net/five3/article/details/86160683)
 ## 现在已经完成的api包括
 ### 1. chatterbot_api
 运行服务后，通过 ip/chatterbot/<str:text> 即可得到chatterbot的回复。我们的压力测试是在这个URL上进行的。
