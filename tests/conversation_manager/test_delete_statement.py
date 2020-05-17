@@ -1,5 +1,5 @@
 from unittest import TestCase
-import requests
+from app import create_app
 from app.view.conversation_manager import generate_token
 import json
 
@@ -11,91 +11,109 @@ class DeleteStatementTestCase(TestCase):
     """
 
     def setUp(self):
+        self.app = create_app().test_client()
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)
         # super().setUp()
 
     def test_no_attribute(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement',
+        r = self.app.get(
+            'admin/delete_statement',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?token=111&sid=1',
+        r = self.app.get(
+            'admin/delete_statement?token=111&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_token(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot&sid=1',
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_username(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterwhat' +
-            '&token='+self.token+'&sid=1',
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterwhat' +
+            '&token=' + self.token + '&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_wrong_token(self):
         wrong_token = generate_token(b'what', 3600)
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
-            '&sid=1' + '&token=' + wrong_token,
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot' +
+            '&token=' + wrong_token + '&sid=1',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_no_id(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot' +
             '&token=' + self.token,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000046)
 
     def test_empty_id(self):
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot' +
             '&token=' + self.token + '&sid=',
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000046)
+        self.assertEqual(r.status_code, 400)
+
+    def test_id_not_a_number(self):
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot' +
+            '&token=' + self.token + '&sid=string',
+            headers=self.myheaders
+        )
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_successful_delete(self):
         data = {
-            'response': '临时对话回复',
-            'text': '临时对话内容',
+            'response': '回复规则',
+            'text': '规则内容',
             'username': 'wechatterbot',
             'token': self.token
         }
-        r1 = requests.post(
-            'http://localhost:5000/admin/create_statement',
-            json.dumps(data),
+        r1 = self.app.post(
+            'admin/create_statement',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r1.text)
+        result = json.loads(r1.data.decode('utf-8'))
         statement = result['statement']
         s_id = statement['id']
 
-        r = requests.get(
-            'http://localhost:5000/admin/delete_statement?username=wechatterbot' +
-            '&token=' + self.token + '&sid='+str(s_id),
+        r = self.app.get(
+            'admin/delete_statement?username=wechatterbot' +
+            '&token=' + self.token + '&sid=' + str(s_id),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)

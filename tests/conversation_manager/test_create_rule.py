@@ -1,7 +1,7 @@
 from unittest import TestCase
-import requests
 from app.view.conversation_manager import generate_token
 import json
+from app import create_app
 
 
 class CreateRuleTestCase(TestCase):
@@ -13,16 +13,18 @@ class CreateRuleTestCase(TestCase):
     def setUp(self):
         self.myheaders = {'Content-Type': 'application/json'}
         self.token = generate_token(b'buaa', 3600)
+        self.app = create_app().test_client()
         # super().setUp()
 
     def test_no_attribute(self):
         data = {}
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_text(self):
@@ -31,12 +33,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_response(self):
@@ -45,12 +48,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_no_username(self):
@@ -59,12 +63,13 @@ class CreateRuleTestCase(TestCase):
             'token': self.token,
             'text': '对话内容'
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "参数不正确", "code": 10000001}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000001)
         self.assertEqual(r.status_code, 400)
 
     def test_wrong_json(self):
@@ -74,12 +79,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            data,
+        r = self.app.post(
+            'admin/create_rule',
+            data=data,
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Json格式错误", "code": 10000041}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000041)
         self.assertEqual(r.status_code, 400)
 
     def test_token_check_fail(self):
@@ -89,12 +95,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterwhat',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "Token验证失败", "code": 10000044}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000044)
         self.assertEqual(r.status_code, 401)
 
     def test_empty_text(self):
@@ -104,12 +111,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "text或response为空", "code": 10000045}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
     def test_empty_response(self):
@@ -119,12 +127,13 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        self.assertEqual(r.text, '{"error": "text或response为空", "code": 10000045}')
+        result = json.loads(r.data.decode('utf-8'))
+        self.assertEqual(result['code'], 10000045)
         self.assertEqual(r.status_code, 400)
 
     def test_successful_creation(self):
@@ -134,12 +143,12 @@ class CreateRuleTestCase(TestCase):
             'username': 'wechatterbot',
             'token': self.token
         }
-        r = requests.post(
-            'http://localhost:5000/admin/create_rule',
-            json.dumps(data),
+        r = self.app.post(
+            'admin/create_rule',
+            data=json.dumps(data),
             headers=self.myheaders
         )
-        result = json.loads(r.text)
+        result = json.loads(r.data.decode('utf-8'))
         rule = result['rule']
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)

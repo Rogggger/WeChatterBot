@@ -385,7 +385,7 @@ def delete_statement():
     if username is None or username == '':
         return error_jsonify(10000001, status_code=400)
     if statement_id == '' or statement_id is None:
-        return error_jsonify(10000001)
+        return error_jsonify(10000046)
     b, result = certify_token(username, token.encode('utf-8'))
     if not b:
         return result
@@ -415,7 +415,7 @@ def delete_rule():
         return result
     rule_id = request.args.get("rid")
     if rule_id == '' or rule_id is None:
-        return error_jsonify(10000001)
+        return error_jsonify(10000046)
     try:
         int(rule_id)
     except Exception:
