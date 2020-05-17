@@ -27,8 +27,8 @@ http://127.0.0.1:5000/chatterbot/你是谁
 具体可以查看我们组单独的admin部分接口文档，[点击这里](https://github.com/bhsei/20_E/blob/master/%E5%AE%9E%E9%AA%8C3%EF%BC%9A%E8%BD%AF%E4%BB%B6%E4%BA%A7%E5%93%81%E6%94%B9%E8%BF%9B%E4%B8%8E%E5%B1%95%E7%A4%BA/%E7%BB%B4%E6%8A%A4%E4%BA%BA%E5%91%98%E7%95%8C%E9%9D%A2%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E.docx)
 
 ## 单元测试和代码覆盖率统计方法
-如果你使用pycharm，在配置好python环境后，直接右键单击项目底的tests文件夹，选择运行`Test: tests`即可自动运行单元测试。代码覆盖率也可以直接通过pycharm的coverage执行功能进行测试，也即右键单击tests文件夹，选择运行`Coverage Test: tests`即可。
+如果你使用Pycharm，在配置好python环境后，直接右键单击项目底的tests文件夹，选择运行`Test: tests`即可自动运行单元测试。代码覆盖率也可以直接通过Pycharm的coverage执行功能进行测试，也即右键单击tests文件夹，选择运行`Coverage Test: tests`即可。
 
 如果是CLI，你需要安装`unittest`包进行单元测试：`python -m unittest tests`；安装`coverag`e包进行代码覆盖率测试：`python -m coverage run tests/a.py`。更多高阶用法请参考[官方文档](https://coverage.readthedocs.io/en/latest/)
 
-需要注意的是，本项目仅在Pycharm下的单元测试和覆盖率测试通过，如果因为系统路径等问题导致的测试失败不在本项目的考虑范围内。
+需要注意的是，本项目**仅在**Pycharm下的单元测试和覆盖率测试通过，如果因为系统路径等问题导致的测试失败不在本项目的考虑范围内。
