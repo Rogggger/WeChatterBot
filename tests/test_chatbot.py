@@ -1,5 +1,4 @@
 from tests.base_case import ChatBotTestCase
-from app.chatterbot.logic import LogicAdapter
 from app.chatterbot.conversation import Statement
 from app.chatterbot import ChatBot, languages, comparisons, response_selection
 
