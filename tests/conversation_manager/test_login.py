@@ -64,5 +64,4 @@ class LoginTestCase(TestCase):
             'http://localhost:5000/admin/login?username=wechatterbot&password=buaawechatterbot',
             headers=self.myheaders
         )
-        result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(r.status_code, 200)
