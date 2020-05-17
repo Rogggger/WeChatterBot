@@ -117,4 +117,3 @@ class DeleteStatementTestCase(TestCase):
         result = json.loads(r.data.decode('utf-8'))
         self.assertEqual(r.status_code, 200)
         self.assertEqual(result['code'], 1)
-        
