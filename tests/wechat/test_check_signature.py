@@ -33,7 +33,6 @@ class CheckSignatureTestCase(TestCase):
         self.assertEqual(r.status_code, 400)
         ret = r.data.decode('utf-8')
         self.assertEqual(ret, '{"code": 10000002, "error": "服务器内部错误"}')
-        #self.assertEqual(ret, '{"error": "服务器内部错误", "code": 10000002}')
 
     def test_lack_keys(self):
         r = self.app.get(self.pre,
