@@ -33,8 +33,8 @@ class PosLemmaTaggerTests(TestCase):
 
         self.assertEqual(tagged_text, '喜欢 音乐')
 
-
     # TODO test failed
+
     def test_tagging_long_words(self):
         tagged_text = self.tagger.get_text_index_string('我会很多种乐器，是不是很厉害')
 
@@ -57,4 +57,4 @@ class PosLemmaTaggerTests(TestCase):
     def test_get_text_index_string_bigram_word(self):
         bigram_string = self.tagger.get_text_index_string('你好')
 
-        self.assertEqual(bigram_string,'你好')
+        self.assertEqual(bigram_string, '你好')

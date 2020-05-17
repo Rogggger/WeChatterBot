@@ -10,7 +10,7 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()
-        self.adapter = ConstAdapter(self.chatbot,const_response='看不懂唉',const_confidence=0.1)
+        self.adapter = ConstAdapter(self.chatbot, const_response='看不懂唉', const_confidence=0.1)
 
     def test_true(self):
         """
@@ -21,4 +21,3 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
 
         self.assertEqual(match.confidence, 0.1)
         self.assertEqual(match, self.adapter.response_statement)
-

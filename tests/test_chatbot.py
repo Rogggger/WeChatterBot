@@ -63,7 +63,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         )
 
         results = list(self.chatbot.storage.filter(text='你好'))
-        self.assertAlmostEqual(first_response.confidence,1,1)
+        self.assertAlmostEqual(first_response.confidence, 1, 1)
         self.assertEqual(first_response.text, '你好')
         self.assertEqual(first_response.in_response_to, '早上好')
 
@@ -108,7 +108,6 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_response(
             u'Ṱ̺̺̕h̼͓̲̦̳̘̲e͇̣̰̦̬͎ ̢̼̻̱̘h͚͎͙̜̣̲ͅi̦̲̣̰̤v̻͍e̺̭̳̪̰-m̢iͅn̖̺̞̲̯̰d̵̼̟͙̩̼̘̳.̨̹͈̣')
         self.assertGreater(len(response.text), 0)
-
 
     def test_get_response_with_text_and_kwargs(self):
         self.chatbot.get_response('你好', conversation='打招呼')
@@ -188,5 +187,3 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         self.assertEqual(len(results), 1)
         self.assertEqual('Example A for search.', results[0].text)
-
-

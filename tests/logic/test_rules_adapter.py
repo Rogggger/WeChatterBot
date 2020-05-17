@@ -16,20 +16,20 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
         """
         Test the case that an exact match is given.
         """
-        self.chatbot.storage.create_rule(text='你喜欢音乐么',in_response_to='喜欢')
+        self.chatbot.storage.create_rule(text='你喜欢音乐么', in_response_to='喜欢')
         statement = Statement(text='你喜欢音乐么')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 10)
-        self.assertEqual(match.text,'喜欢')
+        self.assertEqual(match.text, '喜欢')
 
     def test_not_exact_match(self):
         """
         Test the case that an exact match is not given.
         """
-        self.chatbot.storage.create_rule(text='你喜欢音乐么',in_response_to='喜欢')
+        self.chatbot.storage.create_rule(text='你喜欢音乐么', in_response_to='喜欢')
         statement = Statement(text='你要干什么')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 0)
-        self.assertEqual(match.text,'')
+        self.assertEqual(match.text, '')

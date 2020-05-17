@@ -20,7 +20,6 @@ class BestMatchTestCase(ChatBotTestCase):
         statement = Statement(text='你想干什么')
         self.assertRaises(storage_adapter_new.StorageAdapterNew.EmptyDatabaseException, self.adapter.process, statement)
 
-
     def test_no_choices(self):
         """
         The input should be returned as the closest match if there
