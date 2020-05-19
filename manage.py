@@ -1,12 +1,14 @@
 from flask_script import Manager, Server
 from app import create_app
-from app.libs.chatbot import  train_chatbot
+from app.libs.chatbot import train_chatbot
 app = create_app()
 manager = Manager(app)
+
 
 @manager.command
 def train():
     train_chatbot()
+
 
 manager.add_command('runserver', Server(
     use_reloader=True,

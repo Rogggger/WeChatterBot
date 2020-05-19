@@ -19,6 +19,7 @@ chatbot = ChatBot(
     read_only=True
 )
 
+
 def train_chatbot():
     # only need to run once
     trainer = ChatterBotCorpusTrainer(chatbot)
