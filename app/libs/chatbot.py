@@ -15,8 +15,12 @@ chatbot = ChatBot(
     statement_comparison_function=comparisons.JaccardSimilarity,
     response_selection_method=response_selection.get_random_response,
     const_response='没看懂唉',
-    const_confidence=0.1
+    const_confidence=0.1,
+    read_only=True
 )
-# only need to run once
-# trainer = ChatterBotCorpusTrainer(chatbot)
-# trainer.train("chatterbot.corpus.chinese")
+
+
+def train_chatbot():
+    # only need to run once
+    trainer = ChatterBotCorpusTrainer(chatbot)
+    trainer.train("chatterbot.corpus.chinese")
