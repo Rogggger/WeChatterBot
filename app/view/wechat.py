@@ -30,7 +30,7 @@ def get_reply(type, question):
         return '风太大听不清还是用文字跟我聊天吧>.<'
     elif type == 'event':  # 事件推送的回复
         if question == 'subscribe':
-            return '你好哇，我是WeChatterBot!'
+            return '你好哇，我是WeChatterBot!在下方聊天框里输入中文和我聊天吧~'
         elif question == 'unsubscribe':
             return '再见，有空再来找我玩~'
         else:
@@ -48,7 +48,8 @@ def wechat():
         if not all(k in req for k in check_keys):
             return error_jsonify(10000001)
 
-        if check_signature(WECHAT_TOKEN, req['timestamp'], req['nonce'], req['signature']):
+        if check_signature(WECHAT_TOKEN, req['timestamp'], req['nonce'],
+                           req['signature']):
             return req['echostr']
         else:
             return error_jsonify(10000002)
@@ -57,20 +58,25 @@ def wechat():
         data = request.args
         encrypt_type = data.get('encrypt_type')
         if encrypt_type == 'aes':  # 加密模式
-            req = {k: data[k]
-                   for k in ENCRYPT_SIGNATURE_KEYS if data.get(k) is not None}
+            req = {
+                k: data[k]
+                for k in ENCRYPT_SIGNATURE_KEYS if data.get(k) is not None
+            }
             check_keys = ('signature', 'timestamp', 'nonce', 'msg_signature')
             if not all(k in req for k in check_keys):
                 return error_jsonify(10000001)
 
-            if not check_signature(WECHAT_TOKEN, req['timestamp'], req['nonce'], req['signature']):
+            if not check_signature(WECHAT_TOKEN, req['timestamp'],
+                                   req['nonce'], req['signature']):
                 return error_jsonify(10000002)
 
             encrypt_content = request.get_data()
-            wx_cryptor = WXBizMsgCrypt(
-                WECHAT_TOKEN, WECHAT_AESKEY, WECHAT_APPID)  # 实例化加解密器对象
-            ret, decrypt_xml = wx_cryptor.DecryptMsg(
-                encrypt_content, req['msg_signature'], req['timestamp'], req['nonce'])  # 解密
+            wx_cryptor = WXBizMsgCrypt(WECHAT_TOKEN, WECHAT_AESKEY,
+                                       WECHAT_APPID)  # 实例化加解密器对象
+            ret, decrypt_xml = wx_cryptor.DecryptMsg(encrypt_content,
+                                                     req['msg_signature'],
+                                                     req['timestamp'],
+                                                     req['nonce'])  # 解密
             if ret < 0:
                 return error_jsonify(10000031)  # 解密失败
             xml_str = decrypt_xml
@@ -92,8 +98,9 @@ def wechat():
         reply = get_reply(req_dic['MsgType'].text,
                           req_dic['Content'].text)  # 根据消息类型获得回复
 
-        reply_xml = reply_template(
-            req_dic['FromUserName'].text, req_dic['ToUserName'].text, int(time.time()), reply)
+        reply_xml = reply_template(req_dic['FromUserName'].text,
+                                   req_dic['ToUserName'].text,
+                                   int(time.time()), reply)
         if encrypt_type == 'aes':
             ret, encrypt_xml = wx_cryptor.EncryptMsg(reply_xml, req['nonce'])
             if ret < 0:
